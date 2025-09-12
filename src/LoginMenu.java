@@ -1,3 +1,4 @@
+
 import componentStuff.PanelCover;
 import componentStuff.PanelLoginAndRegister;
 import java.awt.event.ActionEvent;
@@ -7,7 +8,9 @@ import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
-
+import javax.swing.JButton;
+import componentStuff.RoundButton;
+import java.awt.Color;
 
 public class LoginMenu extends javax.swing.JFrame {
 
@@ -15,31 +18,50 @@ public class LoginMenu extends javax.swing.JFrame {
     private PanelCover cover;
     private PanelLoginAndRegister signin;
     private boolean isLogin;
-    private final double addSize=30;
-    private final double coverSize=40;
-    private final double signinSize=60;
-    
+    private final double addSize = 30;
+    private final double coverSize = 40;
+    private final double signinSize = 60;
+
     private final DecimalFormat df = new DecimalFormat("##0.###");
-    
+
     public LoginMenu() {
         initComponents();
         init();
+        CloseButton();
     }
 
-    private void init(){
+    private void CloseButton() {
+        RoundButton btnClose = new RoundButton();
+        btnClose.setBackground(new Color(41, 39, 76));
+        btnClose.setForeground(new Color(0, 0, 0));
+        btnClose.setText("X");
+        btnClose.setBounds(getWidth() - 50, 10, 40, 40); // Make width=height for a circle
+
+        btnClose.addActionListener(e -> System.exit(0));
+
+        getLayeredPane().add(btnClose, bg.DRAG_LAYER);
+
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                btnClose.setLocation(getWidth() - 50, 10);
+            }
+        });
+    }
+
+    private void init() {
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
         signin = new PanelLoginAndRegister();
-        TimingTarget target = new TimingTargetAdapter(){
+        TimingTarget target = new TimingTargetAdapter() {
             @Override
             public void timingEvent(float fraction) {
                 double fractionCover;
                 double fractionSignin;
                 double size = coverSize;
-                if (fraction<=0.5f){
-                    size+=fraction* addSize;
-                }else{
-                    size += addSize - fraction*addSize;
+                if (fraction <= 0.5f) {
+                    size += fraction * addSize;
+                } else {
+                    size += addSize - fraction * addSize;
                 }
                 if (isLogin) {
                     fractionCover = 1f - fraction;
@@ -58,13 +80,13 @@ public class LoginMenu extends javax.swing.JFrame {
                         cover.loginLeft((1f - fraction) * 100);
                     }
                 }
-                if  (fraction>=0.5f){
+                if (fraction >= 0.5f) {
                     signin.showRegister(isLogin);
                 }
                 fractionCover = Double.valueOf(df.format(fractionCover));
                 fractionSignin = Double.valueOf(df.format(fractionSignin));
-                layout.setComponentConstraints(cover, "width "+ size + "%, pos "+ fractionCover+ "al 0 n 100%");
-                layout.setComponentConstraints(signin, "width "+ signinSize + "%, pos "+ fractionSignin+ "al 0 n 100%");
+                layout.setComponentConstraints(cover, "width " + size + "%, pos " + fractionCover + "al 0 n 100%");
+                layout.setComponentConstraints(signin, "width " + signinSize + "%, pos " + fractionSignin + "al 0 n 100%");
                 bg.revalidate();
             }
 
@@ -78,18 +100,18 @@ public class LoginMenu extends javax.swing.JFrame {
         animator.setDeceleration(0.5f);
         animator.setResolution(0);
         bg.setLayout(layout);
-        bg.add(cover, "width "+coverSize + "%, pos 0al 0 n 100%");
-        bg.add(signin, "width "+signinSize + "%, pos 1al 0 n 100%");
+        bg.add(cover, "width " + coverSize + "%, pos 0al 0 n 100%");
+        bg.add(signin, "width " + signinSize + "%, pos 1al 0 n 100%");
         cover.addEvent(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!animator.isRunning()){
+                if (!animator.isRunning()) {
                     animator.start();
                 }
             }
         });
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -127,8 +149,6 @@ public class LoginMenu extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
