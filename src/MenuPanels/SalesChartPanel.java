@@ -119,9 +119,9 @@ public class SalesChartPanel extends JPanel {
             Rectangle2D bar = new Rectangle2D.Double(barX, barY, barWidth, barHeight);
             g2d.fill(bar);
             
-            // Draw value on top of bar
+            // Draw value on top of bar with currency formatting
             g2d.setColor(Color.BLACK);
-            String valueStr = String.format("%.0f", value);
+            String valueStr = "Php " + String.format("%.0f", value);
             int valueX = barX + (barWidth - labelFm.stringWidth(valueStr)) / 2;
             int valueY = barY - 5;
             if (valueY > chartY) {
@@ -138,20 +138,21 @@ public class SalesChartPanel extends JPanel {
             g2d.setColor(new Color(66, 139, 202));
         }
         
-        // Draw Y-axis labels
+        // Draw Y-axis labels with currency formatting
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Arial", Font.PLAIN, 9));
         FontMetrics axisFm = g2d.getFontMetrics();
         
-        // Draw max value at top
-        String maxLabel = String.format("%.0f", maxValue);
+        // Draw max value at top with Php prefix
+        String maxLabel = "Php " + String.format("%.0f", maxValue);
         g2d.drawString(maxLabel, chartX - axisFm.stringWidth(maxLabel) - 5, chartY + 5);
         
-        // Draw 0 at bottom
-        g2d.drawString("0", chartX - axisFm.stringWidth("0") - 5, chartY + chartHeight + 5);
+        // Draw 0 at bottom with Php prefix
+        String zeroLabel = "Php 0";
+        g2d.drawString(zeroLabel, chartX - axisFm.stringWidth(zeroLabel) - 5, chartY + chartHeight + 5);
         
-        // Draw middle value
-        String midLabel = String.format("%.0f", maxValue / 2);
+        // Draw middle value with Php prefix
+        String midLabel = "Php " + String.format("%.0f", maxValue / 2);
         g2d.drawString(midLabel, chartX - axisFm.stringWidth(midLabel) - 5, chartY + chartHeight / 2 + 5);
     }
 }

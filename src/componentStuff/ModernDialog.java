@@ -240,14 +240,15 @@ public class ModernDialog extends JDialog {
         messageLabel.setFont(CONTENT_FONT);
         contentPanel.add(messageLabel, BorderLayout.NORTH);
         
-        // Make input field more prominent and visible
+        // Make input field more prominent and visible with increased height
         JTextField inputField = new JTextField(defaultValue);
-        inputField.setFont(new Font("Arial", Font.PLAIN, 14)); // Slightly larger font
+        inputField.setFont(new Font("Arial", Font.PLAIN, 16)); // Larger font for better visibility
         inputField.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(new Color(200, 200, 200), 2),
-            BorderFactory.createEmptyBorder(10, 12, 10, 12)
+            BorderFactory.createEmptyBorder(12, 15, 12, 15) // Increased padding for taller field
         ));
-        inputField.setPreferredSize(new Dimension(300, 35)); // Ensure minimum size
+        inputField.setPreferredSize(new Dimension(300, 45)); // Increased height from 35 to 45
+        inputField.setMinimumSize(new Dimension(300, 45)); // Ensure minimum size
         contentPanel.add(inputField, BorderLayout.CENTER);
         
         final String[] result = {null};

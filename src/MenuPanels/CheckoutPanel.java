@@ -118,19 +118,32 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         rightMainPanel.add(cartScroll, BorderLayout.CENTER);
         rightMainPanel.add(cartBtnPanel, BorderLayout.SOUTH);
 
-        // Payment fields vertically stacked above numpad
-        ModernPanel paymentFieldsPanel = new ModernPanel(new GridLayout(2, 2, 10, 10));
+        // Payment fields vertically stacked above numpad - improved sizing and layout
+        ModernPanel paymentFieldsPanel = new ModernPanel(new GridLayout(2, 2, 15, 12));
+        paymentFieldsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        
         JLabel amountLabel = new JLabel("Amount Received:");
-        amountLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        amountLabel.setFont(new Font("Arial", Font.BOLD, 13));
+        amountLabel.setForeground(new Color(52, 73, 94));
         paymentFieldsPanel.add(amountLabel);
+        
+        // Make amount received field larger and more visible
         amountReceivedField = new MyTextField();
+        amountReceivedField.setPreferredSize(new Dimension(160, 40)); // Increased height and width
+        amountReceivedField.setFont(new Font("Arial", Font.BOLD, 16)); // Larger font for better visibility
+        amountReceivedField.setHint("0.00"); // Add hint text
         paymentFieldsPanel.add(amountReceivedField);
 
         JLabel changeLabel = new JLabel("Change:");
-        changeLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        changeLabel.setFont(new Font("Arial", Font.BOLD, 13));
+        changeLabel.setForeground(new Color(52, 73, 94));
         paymentFieldsPanel.add(changeLabel);
+        
         changeField = new MyTextField();
+        changeField.setPreferredSize(new Dimension(160, 40)); // Match size with amount field
+        changeField.setFont(new Font("Arial", Font.BOLD, 16)); // Larger font
         changeField.setEditable(false);
+        changeField.setBackground(new Color(230, 230, 230)); // Different background to show it's read-only
         paymentFieldsPanel.add(changeField);
 
         // Numpad setup (with backspace) - make buttons taller
@@ -165,9 +178,9 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         // Payment section panel: payment fields + numpad stacked vertically
         ModernPanel paymentSectionPanel = new ModernPanel();
         paymentSectionPanel.setLayout(new BoxLayout(paymentSectionPanel, BoxLayout.Y_AXIS));
-        // Increase width to ensure "Amount Received:" label is fully visible
-        paymentFieldsPanel.setMaximumSize(new Dimension(280, 80));
-        paymentFieldsPanel.setPreferredSize(new Dimension(280, 80));
+        // Increase dimensions to accommodate larger payment fields
+        paymentFieldsPanel.setMaximumSize(new Dimension(320, 100));
+        paymentFieldsPanel.setPreferredSize(new Dimension(320, 100));
         paymentSectionPanel.add(paymentFieldsPanel);
         paymentSectionPanel.add(Box.createVerticalStrut(15));
         paymentSectionPanel.add(numpadPanel);
