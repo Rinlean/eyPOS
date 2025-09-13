@@ -189,6 +189,17 @@ public class MainMenu extends JFrame {
 
         updateSidebarButtonsForCollapse(sidebarCollapsed);
         cardLayout.show(mainContent, buttonDefs.get(0).cardName);
+        
+        // Add component listener to ensure layout stability during window resize
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                // Ensure layout is maintained when window is resized or maximized
+                containerPanel.revalidate();
+                containerPanel.repaint();
+            }
+        });
+        
         setVisible(true);
     }
 

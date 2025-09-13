@@ -172,9 +172,11 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         rightWithNumpadPanel.add(paymentSectionPanel, BorderLayout.SOUTH);
 
         JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightWithNumpadPanel);
-        split.setDividerLocation(400);
+        split.setDividerLocation(0.5); // Use proportional sizing for better responsiveness
+        split.setResizeWeight(0.5); // Equal resize weight for both panels
         split.setBorder(null);
         split.setOpaque(false);
+        split.setContinuousLayout(true); // Smooth resizing
 
         add(split, BorderLayout.CENTER);
 
