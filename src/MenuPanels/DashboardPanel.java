@@ -50,8 +50,11 @@ public class DashboardPanel extends JPanel implements ProductUpdateListener {
         ModernPanel midPanel = new ModernPanel(new GridLayout(1, 2, 15, 15));
         topSellingProductsTable = new ModernTable();
         topSellingProductsTable.setRowHeight(30); // Increase row height for better readability
+        // Make tables wider with larger preferred viewport sizes
+        topSellingProductsTable.setPreferredScrollableViewportSize(new Dimension(450, 150));
         lowStockTable = new ModernTable();
         lowStockTable.setRowHeight(30); // Increase row height for better readability
+        lowStockTable.setPreferredScrollableViewportSize(new Dimension(450, 150));
         
         midPanel.add(ModernPanel.createTitledPanel("Top-Selling Products", 
             ModernPanel.createCenteredPanel(new ModernScrollPane(topSellingProductsTable))));
@@ -61,7 +64,7 @@ public class DashboardPanel extends JPanel implements ProductUpdateListener {
         recentTransactionsTable = new ModernTable();
         recentTransactionsTable.setRowHeight(30); // Increase row height for better readability
         // Make the recent transactions table larger by giving it more space
-        recentTransactionsTable.setPreferredScrollableViewportSize(new Dimension(600, 200));
+        recentTransactionsTable.setPreferredScrollableViewportSize(new Dimension(800, 250));
         JPanel bottomPanel = ModernPanel.createTitledPanel("Recent Transactions", 
             ModernPanel.createCenteredPanel(new ModernScrollPane(recentTransactionsTable)));
 

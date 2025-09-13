@@ -76,6 +76,8 @@ public class MainMenu extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 600);
         setLocationRelativeTo(null);
+        // Start maximized when opened
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         sidebar = new RoundedSidebar();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
