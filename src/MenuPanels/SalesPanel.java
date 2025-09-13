@@ -1,13 +1,53 @@
 package MenuPanels;
 
+import DAOstuff.sales.SaleDAO;
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
+import java.util.Map;
 
 public class SalesPanel extends JPanel {
+    private SalesChartPanel chartPanel;
+    private SaleDAO saleDAO;
+    private JButton refreshButton;
+    
     public SalesPanel() {
+        saleDAO = new SaleDAO();
+        initializeComponents();
+        loadSalesData();
+    }
+    
+    private void initializeComponents() {
         setLayout(new BorderLayout());
-        add(new JLabel("Sales Panel", SwingConstants.CENTER), BorderLayout.CENTER);
-        // Add more Sales-specific components here
+        
+        // Create title panel
+        JPanel titlePanel = new JPanel();
+        titlePanel.add(new JLabel("Sales Panel", SwingConstants.CENTER));
+        
+        // Create refresh button
+        refreshButton = new JButton("Refresh Data");
+        refreshButton.addActionListener(e -> loadSalesData());
+        titlePanel.add(refreshButton);
+        
+        add(titlePanel, BorderLayout.NORTH);
+        
+        // Create chart panel
+        chartPanel = new SalesChartPanel();
+        add(chartPanel, BorderLayout.CENTER);
+    }
+    
+    private void loadSalesData() {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                Map<String, Double> salesData = saleDAO.getDailySalesTotals();
+                chartPanel.setSalesData(salesData);
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, 
+                    "Error loading sales data: " + e.getMessage(), 
+                    "Database Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
