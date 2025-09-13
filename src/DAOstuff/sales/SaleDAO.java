@@ -51,11 +51,6 @@ public class SaleDAO {
         }
     }
     
-    /**
-     * Gets daily sales totals grouped by date.
-     * @return Map where key is date (YYYY-MM-DD format) and value is total sales amount
-     * @throws SQLException if database error occurs
-     */
     public Map<String, Double> getDailySalesTotals() throws SQLException {
         String query = "SELECT DATE(sale_date) as sale_day, SUM(total_amount) as daily_total " +
                       "FROM sales " +
