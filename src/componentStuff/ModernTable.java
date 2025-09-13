@@ -45,6 +45,9 @@ public class ModernTable extends JTable {
         setSelectionForeground(SELECTION_TEXT_COLOR);
         setFillsViewportHeight(true);
         
+        // Enable auto-resizing for responsiveness
+        setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        
         // Header styling
         JTableHeader header = getTableHeader();
         header.setBackground(HEADER_COLOR);

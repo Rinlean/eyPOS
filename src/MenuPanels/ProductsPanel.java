@@ -53,6 +53,9 @@ public class ProductsPanel extends JPanel {
             }
         };
         productTable = new ModernTable(tableModel);
+        // Increase table size for better visibility
+        productTable.setPreferredScrollableViewportSize(new Dimension(800, 400));
+        productTable.setRowHeight(35); // Increase row height for better readability
         ModernScrollPane scrollPane = new ModernScrollPane(productTable);
         JPanel tablePanel = ModernPanel.createCenteredPanel(scrollPane);
         add(tablePanel, BorderLayout.CENTER);
@@ -64,19 +67,22 @@ public class ProductsPanel extends JPanel {
             addBtn.setText("Add Product");
             addBtn.setBackground(new Color(40, 167, 69));
             addBtn.setForeground(Color.WHITE);
-            addBtn.setFont(new Font("Arial", Font.BOLD, 12));
+            addBtn.setFont(new Font("Arial", Font.BOLD, 14));
+            addBtn.setPreferredSize(new Dimension(130, 35));
             
             Button editBtn = new Button();
             editBtn.setText("Edit Product");
             editBtn.setBackground(new Color(255, 193, 7));
             editBtn.setForeground(Color.BLACK);
-            editBtn.setFont(new Font("Arial", Font.BOLD, 12));
+            editBtn.setFont(new Font("Arial", Font.BOLD, 14));
+            editBtn.setPreferredSize(new Dimension(130, 35));
             
             Button delBtn = new Button();
             delBtn.setText("Remove Product");
             delBtn.setBackground(new Color(220, 53, 69));
             delBtn.setForeground(Color.WHITE);
-            delBtn.setFont(new Font("Arial", Font.BOLD, 12));
+            delBtn.setFont(new Font("Arial", Font.BOLD, 14));
+            delBtn.setPreferredSize(new Dimension(150, 35));
             
             adminPanel.add(addBtn);
             adminPanel.add(editBtn);
