@@ -1,5 +1,10 @@
 package MenuPanels;
 
+import componentStuff.ModernTable;
+import componentStuff.ModernScrollPane;
+import componentStuff.ModernPanel;
+import componentStuff.ModernDialog;
+import componentStuff.Button;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -7,24 +12,42 @@ import java.util.List;
 import DAOstuff.user.*;
 
 public class UserMgmtPanel extends JPanel {
-    private JTable userTable;
+    private ModernTable userTable;
     private DefaultTableModel tableModel;
 
     public UserMgmtPanel() {
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setBackground(new Color(248, 249, 250));
 
         String[] columnNames = {"ID", "Username", "Password", "Type"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override public boolean isCellEditable(int row, int column) { return false; }
         };
-        userTable = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(userTable);
-        add(scrollPane, BorderLayout.CENTER);
+        userTable = new ModernTable(tableModel);
+        ModernScrollPane scrollPane = new ModernScrollPane(userTable);
+        JPanel tablePanel = ModernPanel.createCenteredPanel(scrollPane);
+        add(tablePanel, BorderLayout.CENTER);
 
-        JPanel adminPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton addBtn = new JButton("Add User");
-        JButton editBtn = new JButton("Edit User");
-        JButton delBtn = new JButton("Remove User");
+        ModernPanel adminPanel = new ModernPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        Button addBtn = new Button();
+        addBtn.setText("Add User");
+        addBtn.setBackground(new Color(40, 167, 69));
+        addBtn.setForeground(Color.WHITE);
+        addBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        
+        Button editBtn = new Button();
+        editBtn.setText("Edit User");
+        editBtn.setBackground(new Color(255, 193, 7));
+        editBtn.setForeground(Color.BLACK);
+        editBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        
+        Button delBtn = new Button();
+        delBtn.setText("Remove User");
+        delBtn.setBackground(new Color(220, 53, 69));
+        delBtn.setForeground(Color.WHITE);
+        delBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        
         adminPanel.add(addBtn);
         adminPanel.add(editBtn);
         adminPanel.add(delBtn);
@@ -42,7 +65,7 @@ public class UserMgmtPanel extends JPanel {
         editBtn.addActionListener(e -> {
             int row = userTable.getSelectedRow();
             if (row == -1) {
-                JOptionPane.showMessageDialog(this, "Select a user to edit.");
+                ModernDialog.showMessageDialog(this, "Select a user to edit.", "Edit User", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
             User u = getUserFromRow(row);
@@ -57,15 +80,15 @@ public class UserMgmtPanel extends JPanel {
         delBtn.addActionListener(e -> {
             int row = userTable.getSelectedRow();
             if (row == -1) {
-                JOptionPane.showMessageDialog(this, "Select a user to remove.");
+                ModernDialog.showMessageDialog(this, "Select a user to remove.", "Remove User", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
             User u = getUserFromRow(row);
             if (u.getUsername().equals("admin")) {
-                JOptionPane.showMessageDialog(this, "Cannot remove the main admin account.");
+                ModernDialog.showMessageDialog(this, "Cannot remove the main admin account.", "Remove User", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to remove this user?", "Remove User", JOptionPane.YES_NO_OPTION);
+            int confirm = ModernDialog.showConfirmDialog(this, "Are you sure you want to remove this user?", "Remove User");
             if (confirm == JOptionPane.YES_OPTION) {
                 boolean success = UserDAO.deleteUser(u.getUserId());
                 if (success) refreshUserList();
