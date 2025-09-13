@@ -1,3 +1,4 @@
+package MenuStuff;
 
 import componentStuff.PanelCover;
 import componentStuff.PanelLoginAndRegister;

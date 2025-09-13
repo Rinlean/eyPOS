@@ -1,11 +1,12 @@
 package componentStuff;
 
+import MenuStuff.MainMenu;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
-import javax.swing.JButton;
+import javax.swing.SwingUtilities;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.ImageIcon;
@@ -131,8 +132,11 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                 ps.setString(2, password); // For real apps, use hashed passwords!
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
+                    String role = rs.getString("type");
                     JOptionPane.showMessageDialog(this, "Login successful!");
-                    // Proceed to main form here
+                    MainMenu mainMenu = new MainMenu(username, role);
+                    mainMenu.setVisible(true);
+                    SwingUtilities.getWindowAncestor(this).dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "Invalid credentials!");
                 }
