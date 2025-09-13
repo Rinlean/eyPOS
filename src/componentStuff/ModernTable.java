@@ -48,13 +48,30 @@ public class ModernTable extends JTable {
         // Enable auto-resizing for responsiveness
         setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         
-        // Header styling
+        // Header styling - ensure proper rendering when called from login
         JTableHeader header = getTableHeader();
         header.setBackground(HEADER_COLOR);
         header.setForeground(HEADER_TEXT_COLOR);
         header.setFont(HEADER_FONT);
         header.setPreferredSize(new Dimension(header.getPreferredSize().width, 35));
         header.setReorderingAllowed(false);
+        // Force header to be opaque to ensure proper background rendering
+        header.setOpaque(true);
+        
+        // Custom header renderer to ensure consistent styling
+        header.setDefaultRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                c.setBackground(HEADER_COLOR);
+                c.setForeground(HEADER_TEXT_COLOR);
+                c.setFont(HEADER_FONT);
+                setHorizontalAlignment(SwingConstants.LEFT);
+                setBorder(BorderFactory.createEmptyBorder(5, 8, 5, 8));
+                return c;
+            }
+        });
         
         // Custom cell renderer for alternating row colors
         setDefaultRenderer(Object.class, new ModernTableCellRenderer());

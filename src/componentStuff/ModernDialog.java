@@ -215,8 +215,11 @@ public class ModernDialog extends JDialog {
         ModernDialog dialog = new ModernDialog(parentFrame, title, true);
         
         dialog.setLayout(new BorderLayout());
-        dialog.setSize(400, 180);
+        dialog.setSize(420, 200); // Slightly larger to ensure visibility
         dialog.setLocationRelativeTo(parent);
+        // Ensure dialog is always on top and modal
+        dialog.setAlwaysOnTop(true);
+        dialog.setModal(true);
         
         // Header panel
         JPanel headerPanel = new JPanel(new BorderLayout());
@@ -229,20 +232,22 @@ public class ModernDialog extends JDialog {
         headerPanel.add(titleLabel, BorderLayout.WEST);
         
         // Content panel
-        JPanel contentPanel = new JPanel(new BorderLayout());
+        JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
         contentPanel.setBackground(BACKGROUND_COLOR);
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 15, 20));
         
         JLabel messageLabel = new JLabel(message);
         messageLabel.setFont(CONTENT_FONT);
         contentPanel.add(messageLabel, BorderLayout.NORTH);
         
+        // Make input field more prominent and visible
         JTextField inputField = new JTextField(defaultValue);
-        inputField.setFont(CONTENT_FONT);
+        inputField.setFont(new Font("Arial", Font.PLAIN, 14)); // Slightly larger font
         inputField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
-            BorderFactory.createEmptyBorder(8, 12, 8, 12)
+            BorderFactory.createLineBorder(new Color(200, 200, 200), 2),
+            BorderFactory.createEmptyBorder(10, 12, 10, 12)
         ));
+        inputField.setPreferredSize(new Dimension(300, 35)); // Ensure minimum size
         contentPanel.add(inputField, BorderLayout.CENTER);
         
         final String[] result = {null};
