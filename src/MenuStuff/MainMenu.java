@@ -56,7 +56,7 @@ public class MainMenu extends JFrame {
             new SidebarButtonDef("Check Out", "/imagestuff/mail.png", "ChckOut", false, CheckoutPanel::new),
             new SidebarButtonDef("Dashboard", "/imagestuff/mail.png", "Dashboard", false, DashboardPanel::new),
             new SidebarButtonDef("Sales", "/imagestuff/mail.png", "Sales", false, SalesPanel::new),
-            new SidebarButtonDef("Products", "/imagestuff/mail.png", "Products", false, ProductsPanel::new),
+            new SidebarButtonDef("Products", "/imagestuff/mail.png", "Products", false, () -> new ProductsPanel(isAdmin)),
             new SidebarButtonDef("User Management", "/imagestuff/mail.png", "UserMgmt", true, UserMgmtPanel::new)
     );
     // ---------------------------------------------------------------
