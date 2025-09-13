@@ -224,7 +224,7 @@ public class CheckoutPanel extends JPanel {
             });
             total += subtotal;
         }
-        totalLabel.setText("Total: " + String.format("%.2f", total));
+        totalLabel.setText("Total: Php " + String.format("%.2f", total));
         updateChange();
     }
 
@@ -249,9 +249,9 @@ public class CheckoutPanel extends JPanel {
             return;
         }
         int confirm = JOptionPane.showConfirmDialog(this,
-                "Total: " + String.format("%.2f", total)
-                        + "\nReceived: " + String.format("%.2f", received)
-                        + "\nChange: " + String.format("%.2f", received - total)
+                "Total: Php " + String.format("%.2f", total)
+                        + "\nReceived: Php " + String.format("%.2f", received)
+                        + "\nChange: Php " + String.format("%.2f", received - total)
                         + "\n\nConfirm checkout?", "Checkout", JOptionPane.YES_NO_OPTION);
         if (confirm != JOptionPane.YES_OPTION) {
             return;
