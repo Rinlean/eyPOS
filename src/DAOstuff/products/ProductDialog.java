@@ -1,4 +1,4 @@
-package ProductStuff;
+package DAOstuff.products;
 
 import javax.swing.*;
 import java.awt.*;

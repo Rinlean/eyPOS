@@ -1,17 +1,20 @@
 package MenuPanels;
 
+import DAOstuff.products.ProductDialog;
+import DAOstuff.products.Product;
+import DAOstuff.products.ProductsDAO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
-import ProductStuff.*;
-
 
 public class ProductsPanel extends JPanel {
+
     private JTable productTable;
     private DefaultTableModel tableModel;
     private boolean isAdmin;
     private JTextField searchField;
+    private javax.swing.Timer debounceTimer;
 
     public ProductsPanel(boolean isAdmin) {
         this.isAdmin = isAdmin;
@@ -20,16 +23,19 @@ public class ProductsPanel extends JPanel {
         // Search bar (always shown)
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchField = new JTextField(20);
-        JButton searchBtn = new JButton("Search");
         searchPanel.add(new JLabel("Search:"));
         searchPanel.add(searchField);
-        searchPanel.add(searchBtn);
         add(searchPanel, BorderLayout.NORTH);
+
+        setupSearchDebounce();
 
         // Table columns
         String[] columnNames = {"ID", "Barcode", "Name", "Price", "Description", "Quantity"};
         tableModel = new DefaultTableModel(columnNames, 0) {
-            @Override public boolean isCellEditable(int row, int column) { return false; }
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
         productTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(productTable);
@@ -71,11 +77,29 @@ public class ProductsPanel extends JPanel {
             });
         }
 
-        // Search actions
-        searchBtn.addActionListener(e -> searchProducts());
-        searchField.addActionListener(e -> searchProducts());
-
         refreshProductList();
+    }
+
+    private void setupSearchDebounce() {
+        debounceTimer = new javax.swing.Timer(300, e -> searchProducts());
+        debounceTimer.setRepeats(false);
+        searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                restartDebounce();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                restartDebounce();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                restartDebounce();
+            }
+        });
+    }
+
+    private void restartDebounce() {
+        debounceTimer.restart();
     }
 
     private void searchProducts() {
@@ -107,12 +131,12 @@ public class ProductsPanel extends JPanel {
 
     private Product getProductFromRow(int row) {
         return new Product(
-            (int) tableModel.getValueAt(row, 0),
-            (String) tableModel.getValueAt(row, 1),
-            (String) tableModel.getValueAt(row, 2),
-            Double.parseDouble(tableModel.getValueAt(row, 3).toString()),
-            (String) tableModel.getValueAt(row, 4),
-            (int) tableModel.getValueAt(row, 5)
+                (int) tableModel.getValueAt(row, 0),
+                (String) tableModel.getValueAt(row, 1),
+                (String) tableModel.getValueAt(row, 2),
+                Double.parseDouble(tableModel.getValueAt(row, 3).toString()),
+                (String) tableModel.getValueAt(row, 4),
+                (int) tableModel.getValueAt(row, 5)
         );
     }
 

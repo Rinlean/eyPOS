@@ -1,4 +1,4 @@
-package ProductStuff;
+package DAOstuff.products;
 
 public class Product {
     private int prodId;
@@ -8,7 +8,6 @@ public class Product {
     private String prodDesc;
     private int quantity;
 
-    // Constructor, getters, setters
     public Product(int prodId, String prodBarCode, String prodName, double prodPrice, String prodDesc, int quantity) {
         this.prodId = prodId;
         this.prodBarCode = prodBarCode;
