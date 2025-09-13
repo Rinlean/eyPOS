@@ -12,9 +12,9 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.JButton;
 import javax.swing.border.EmptyBorder;
-import org.jdesktop.animation.timing.Animator;
-import org.jdesktop.animation.timing.TimingTarget;
-import org.jdesktop.animation.timing.TimingTargetAdapter;
+// import org.jdesktop.animation.timing.Animator;
+// import org.jdesktop.animation.timing.TimingTarget;
+// import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 public class Button extends JButton {
 
@@ -26,7 +26,7 @@ public class Button extends JButton {
         this.effectColor = effectColor;
     }
 
-    private Animator animator;
+    // private Animator animator;
     private int targetSize;
     private float animatSize;
     private Point pressedPoint;
@@ -45,12 +45,13 @@ public class Button extends JButton {
                 animatSize = 0;
                 pressedPoint = me.getPoint();
                 alpha = 0.5f;
-                if (animator.isRunning()) {
-                    animator.stop();
-                }
-                animator.start();
+                // if (animator.isRunning()) {
+                //     animator.stop();
+                // }
+                // animator.start();
             }
         });
+        /*
         TimingTarget target = new TimingTargetAdapter() {
             @Override
             public void timingEvent(float fraction) {
@@ -65,6 +66,7 @@ public class Button extends JButton {
         animator.setAcceleration(0.5f);
         animator.setDeceleration(0.5f);
         animator.setResolution(0);
+        */
     }
 
     @Override

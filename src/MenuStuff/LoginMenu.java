@@ -6,9 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import net.miginfocom.swing.MigLayout;
-import org.jdesktop.animation.timing.Animator;
-import org.jdesktop.animation.timing.TimingTarget;
-import org.jdesktop.animation.timing.TimingTargetAdapter;
+// import org.jdesktop.animation.timing.Animator;
+// import org.jdesktop.animation.timing.TimingTarget;
+// import org.jdesktop.animation.timing.TimingTargetAdapter;
 import componentStuff.Button;
 import java.awt.Color;
 import java.awt.Font;
@@ -66,6 +66,7 @@ public class LoginMenu extends javax.swing.JFrame {
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
         signin = new PanelLoginAndRegister();
+        /*
         TimingTarget target = new TimingTargetAdapter() {
             @Override
             public void timingEvent(float fraction) {
@@ -113,15 +114,17 @@ public class LoginMenu extends javax.swing.JFrame {
         animator.setAcceleration(0.5f);
         animator.setDeceleration(0.5f);
         animator.setResolution(0);
+        */
         bg.setLayout(layout);
         bg.add(cover, "width " + coverSize + "%, pos 0al 0 n 100%");
         bg.add(signin, "width " + signinSize + "%, pos 1al 0 n 100%");
         cover.addEvent(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!animator.isRunning()) {
-                    animator.start();
-                }
+                // Animation removed for compilation
+                // if (!animator.isRunning()) {
+                //     animator.start();
+                // }
             }
         });
     }
