@@ -11,12 +11,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 import java.util.function.Supplier;
-
-// Import modular menu panels
-import MenuPanels.DashboardPanel;
-import MenuPanels.SalesPanel;
-import MenuPanels.ProductsPanel;
-import MenuPanels.UserMgmtPanel;
+import MenuPanels.*;
 
 public class MainMenu extends JFrame {
 
@@ -58,6 +53,7 @@ public class MainMenu extends JFrame {
 
     // --------- EDIT SECTION: add/remove menu buttons here ----------
     private final List<SidebarButtonDef> buttonDefs = Arrays.asList(
+            new SidebarButtonDef("Check Out", "/imagestuff/mail.png", "ChckOut", false, CheckoutPanel::new),
             new SidebarButtonDef("Dashboard", "/imagestuff/mail.png", "Dashboard", false, DashboardPanel::new),
             new SidebarButtonDef("Sales", "/imagestuff/mail.png", "Sales", false, SalesPanel::new),
             new SidebarButtonDef("Products", "/imagestuff/mail.png", "Products", false, ProductsPanel::new),
