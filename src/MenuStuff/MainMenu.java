@@ -2,6 +2,7 @@ package MenuStuff;
 
 import componentStuff.Button;
 import componentStuff.RoundedSidebar;
+import componentStuff.ModernDialog;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -159,7 +160,7 @@ public class MainMenu extends JFrame {
         JButton logoutButton = new JButton("Logout");
         logoutButton.setFocusable(false);
         logoutButton.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
+            int confirm = ModernDialog.showConfirmDialog(this, "Are you sure you want to logout?", "Logout");
             if (confirm == JOptionPane.YES_OPTION) {
                 dispose();
                 new LoginMenu().setVisible(true);

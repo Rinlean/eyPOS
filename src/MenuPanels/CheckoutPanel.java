@@ -6,6 +6,12 @@ import DAOstuff.sales.Sale;
 import DAOstuff.sales.SaleItem;
 import DAOstuff.sales.SaleDAO;
 import componentStuff.ProductUpdateListener;
+import componentStuff.ModernTable;
+import componentStuff.ModernScrollPane;
+import componentStuff.ModernPanel;
+import componentStuff.ModernDialog;
+import componentStuff.MyTextField;
+import componentStuff.Button;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -17,8 +23,8 @@ import java.sql.SQLException;
 
 public class CheckoutPanel extends JPanel implements ProductUpdateListener {
 
-    private JTable productTable;
-    private JTable cartTable;
+    private ModernTable productTable;
+    private ModernTable cartTable;
     private DefaultTableModel productModel;
     private DefaultTableModel cartModel;
     private JLabel totalLabel;
@@ -29,8 +35,8 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
     private ProductsPanel productsPanel; // Reference to trigger notifications
 
     // Payment and numpad fields
-    private JTextField amountReceivedField;
-    private JTextField changeField;
+    private MyTextField amountReceivedField;
+    private MyTextField changeField;
     private JPanel numpadPanel;
 
     public CheckoutPanel() {
@@ -39,57 +45,92 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
 
     public CheckoutPanel(ProductsPanel productsPanel) {
         this.productsPanel = productsPanel;
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setBackground(new Color(248, 249, 250));
 
         // Product Table
         productModel = new DefaultTableModel(new String[]{"ID", "Name", "Price", "Stock"}, 0);
-        productTable = new JTable(productModel);
-        JScrollPane productScroll = new JScrollPane(productTable);
+        productTable = new ModernTable(productModel);
+        ModernScrollPane productScroll = new ModernScrollPane(productTable);
 
         // Cart Table
         cartModel = new DefaultTableModel(new String[]{"ID", "Name", "Price", "Qty", "Subtotal"}, 0);
-        cartTable = new JTable(cartModel);
-        JScrollPane cartScroll = new JScrollPane(cartTable);
+        cartTable = new ModernTable(cartModel);
+        ModernScrollPane cartScroll = new ModernScrollPane(cartTable);
 
         // Buttons and total
-        JButton addToCartBtn = new JButton("Add to Cart");
-        JButton removeFromCartBtn = new JButton("Remove Selected");
-        JButton checkoutBtn = new JButton("Check Out");
-        totalLabel = new JLabel("Total: 0.00");
+        Button addToCartBtn = new Button();
+        addToCartBtn.setText("Add to Cart");
+        addToCartBtn.setBackground(new Color(40, 167, 69));
+        addToCartBtn.setForeground(Color.WHITE);
+        addToCartBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        
+        Button removeFromCartBtn = new Button();
+        removeFromCartBtn.setText("Remove Selected");
+        removeFromCartBtn.setBackground(new Color(220, 53, 69));
+        removeFromCartBtn.setForeground(Color.WHITE);
+        removeFromCartBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        
+        Button checkoutBtn = new Button();
+        checkoutBtn.setText("Check Out");
+        checkoutBtn.setBackground(new Color(0, 123, 255));
+        checkoutBtn.setForeground(Color.WHITE);
+        checkoutBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        
+        totalLabel = new JLabel("Total: Php 0.00");
+        totalLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        totalLabel.setForeground(new Color(52, 73, 94));
 
         addToCartBtn.addActionListener(e -> addToCart());
         removeFromCartBtn.addActionListener(e -> removeFromCart());
         checkoutBtn.addActionListener(e -> checkout());
 
-        JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.add(new JLabel("Products"), BorderLayout.NORTH);
+        ModernPanel leftPanel = new ModernPanel(new BorderLayout(10, 10));
+        JLabel productsLabel = new JLabel("Products");
+        productsLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        productsLabel.setForeground(new Color(52, 73, 94));
+        productsLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 10, 5));
+        leftPanel.add(productsLabel, BorderLayout.NORTH);
         leftPanel.add(productScroll, BorderLayout.CENTER);
-        leftPanel.add(addToCartBtn, BorderLayout.SOUTH);
+        
+        ModernPanel addButtonPanel = new ModernPanel(new FlowLayout(FlowLayout.CENTER));
+        addButtonPanel.add(addToCartBtn);
+        leftPanel.add(addButtonPanel, BorderLayout.SOUTH);
 
         // --- RIGHT PANEL LAYOUT ---
-        JPanel cartBtnPanel = new JPanel();
+        ModernPanel cartBtnPanel = new ModernPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         cartBtnPanel.add(removeFromCartBtn);
         cartBtnPanel.add(totalLabel);
         cartBtnPanel.add(checkoutBtn);
 
-        JPanel rightMainPanel = new JPanel(new BorderLayout());
-        rightMainPanel.add(new JLabel("Cart"), BorderLayout.NORTH);
+        ModernPanel rightMainPanel = new ModernPanel(new BorderLayout(10, 10));
+        JLabel cartLabel = new JLabel("Cart");
+        cartLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        cartLabel.setForeground(new Color(52, 73, 94));
+        cartLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 10, 5));
+        rightMainPanel.add(cartLabel, BorderLayout.NORTH);
         rightMainPanel.add(cartScroll, BorderLayout.CENTER);
         rightMainPanel.add(cartBtnPanel, BorderLayout.SOUTH);
 
         // Payment fields vertically stacked above numpad
-        JPanel paymentFieldsPanel = new JPanel(new GridLayout(2, 2, 5, 5));
-        paymentFieldsPanel.add(new JLabel("Amount Received:"));
-        amountReceivedField = new JTextField();
+        ModernPanel paymentFieldsPanel = new ModernPanel(new GridLayout(2, 2, 10, 10));
+        JLabel amountLabel = new JLabel("Amount Received:");
+        amountLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        paymentFieldsPanel.add(amountLabel);
+        amountReceivedField = new MyTextField();
         paymentFieldsPanel.add(amountReceivedField);
 
-        paymentFieldsPanel.add(new JLabel("Change:"));
-        changeField = new JTextField();
+        JLabel changeLabel = new JLabel("Change:");
+        changeLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        paymentFieldsPanel.add(changeLabel);
+        changeField = new MyTextField();
         changeField.setEditable(false);
         paymentFieldsPanel.add(changeField);
 
         // Numpad setup (with backspace)
         numpadPanel = new JPanel(new GridLayout(4, 4, 5, 5));
+        numpadPanel.setOpaque(false);
         String[] buttons = {
             "7", "8", "9", "←",
             "4", "5", "6", "C",
@@ -97,30 +138,38 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
             "0", ".", "", ""
         };
         for (String text : buttons) {
-            JButton btn = new JButton(text);
             if (!text.isEmpty()) {
+                Button btn = new Button();
+                btn.setText(text);
+                btn.setBackground(new Color(108, 117, 125));
+                btn.setForeground(Color.WHITE);
+                btn.setFont(new Font("Arial", Font.BOLD, 14));
                 btn.addActionListener(e -> handleNumpadInput(text));
+                numpadPanel.add(btn);
             } else {
-                btn.setEnabled(false);
+                JPanel emptyPanel = new JPanel();
+                emptyPanel.setOpaque(false);
+                numpadPanel.add(emptyPanel);
             }
-            numpadPanel.add(btn);
         }
 
         // Payment section panel: payment fields + numpad stacked vertically
-        JPanel paymentSectionPanel = new JPanel();
+        ModernPanel paymentSectionPanel = new ModernPanel();
         paymentSectionPanel.setLayout(new BoxLayout(paymentSectionPanel, BoxLayout.Y_AXIS));
-        paymentFieldsPanel.setMaximumSize(new Dimension(220, 50));
+        paymentFieldsPanel.setMaximumSize(new Dimension(220, 80));
         paymentSectionPanel.add(paymentFieldsPanel);
-        paymentSectionPanel.add(Box.createVerticalStrut(10));
+        paymentSectionPanel.add(Box.createVerticalStrut(15));
         paymentSectionPanel.add(numpadPanel);
 
         // Align payment section to bottom right
-        JPanel rightWithNumpadPanel = new JPanel(new BorderLayout());
+        ModernPanel rightWithNumpadPanel = new ModernPanel(new BorderLayout(10, 10));
         rightWithNumpadPanel.add(rightMainPanel, BorderLayout.CENTER);
         rightWithNumpadPanel.add(paymentSectionPanel, BorderLayout.SOUTH);
 
         JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightWithNumpadPanel);
         split.setDividerLocation(400);
+        split.setBorder(null);
+        split.setOpaque(false);
 
         add(split, BorderLayout.CENTER);
 
@@ -177,7 +226,7 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         }
         Product p = products.get(row);
 
-        String qtyStr = JOptionPane.showInputDialog(this, "Quantity:", "1");
+        String qtyStr = ModernDialog.showInputDialog(this, "Enter quantity:", "Add to Cart", "1");
         if (qtyStr == null) {
             return;
         }
@@ -185,18 +234,18 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         try {
             qty = Integer.parseInt(qtyStr);
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Invalid quantity!");
+            ModernDialog.showMessageDialog(this, "Invalid quantity!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (qty <= 0 || qty > p.getQuantity()) {
-            JOptionPane.showMessageDialog(this, "Invalid quantity!");
+            ModernDialog.showMessageDialog(this, "Invalid quantity!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         // If already in cart, update quantity
         for (CartItem item : cart) {
             if (item.product.getProdId() == p.getProdId()) {
                 if (item.qty + qty > p.getQuantity()) {
-                    JOptionPane.showMessageDialog(this, "Not enough stock!");
+                    ModernDialog.showMessageDialog(this, "Not enough stock!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 item.qty += qty;
@@ -237,7 +286,7 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
 
     private void checkout() {
         if (cart.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Cart is empty!");
+            ModernDialog.showMessageDialog(this, "Cart is empty!", "Checkout Error", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         double total = 0;
@@ -248,24 +297,24 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         try {
             received = Double.parseDouble(amountReceivedField.getText());
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Please enter a valid amount received!");
+            ModernDialog.showMessageDialog(this, "Please enter a valid amount received!", "Invalid Input", JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (received < total) {
-            JOptionPane.showMessageDialog(this, "Amount received is less than total!");
+            ModernDialog.showMessageDialog(this, "Amount received is less than total!", "Insufficient Payment", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        int confirm = JOptionPane.showConfirmDialog(this,
+        int confirm = ModernDialog.showConfirmDialog(this,
                 "Total: Php " + String.format("%.2f", total)
                         + "\nReceived: Php " + String.format("%.2f", received)
                         + "\nChange: Php " + String.format("%.2f", received - total)
-                        + "\n\nConfirm checkout?", "Checkout", JOptionPane.YES_NO_OPTION);
+                        + "\n\nConfirm checkout?", "Confirm Checkout");
         if (confirm != JOptionPane.YES_OPTION) {
             return;
         }
         for (CartItem item : cart) {
             if (item.qty > item.product.getQuantity()) {
-                JOptionPane.showMessageDialog(this, "Not enough stock for " + item.product.getProdName());
+                ModernDialog.showMessageDialog(this, "Not enough stock for " + item.product.getProdName(), "Stock Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
@@ -292,11 +341,11 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         try {
             saleDAO.saveSale(sale);
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Failed to record sale: " + e.getMessage());
+            ModernDialog.showMessageDialog(this, "Failed to record sale: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        JOptionPane.showMessageDialog(this, "Checkout successful!\nChange: " + String.format("%.2f", change));
+        ModernDialog.showMessageDialog(this, "Checkout successful!\nChange: Php " + String.format("%.2f", change), "Checkout Complete", JOptionPane.INFORMATION_MESSAGE);
         cart.clear();
         updateCartTable();
         loadProducts();

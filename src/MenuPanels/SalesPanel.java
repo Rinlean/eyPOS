@@ -1,6 +1,9 @@
 package MenuPanels;
 
 import DAOstuff.sales.SaleDAO;
+import componentStuff.ModernPanel;
+import componentStuff.ModernDialog;
+import componentStuff.Button;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
@@ -15,8 +18,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class SalesPanel extends JPanel {
     private SalesChartPanel chartPanel;
     private SaleDAO saleDAO;
-    private JButton refreshButton;
-    private JButton exportButton;
+    private Button refreshButton;
+    private Button exportButton;
 
     public SalesPanel() {
         saleDAO = new SaleDAO();
@@ -25,27 +28,42 @@ public class SalesPanel extends JPanel {
     }
 
     private void initializeComponents() {
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setBackground(new java.awt.Color(248, 249, 250));
 
         // Create title panel
-        JPanel titlePanel = new JPanel();
-        titlePanel.add(new JLabel("Sales Panel", SwingConstants.CENTER));
+        ModernPanel titlePanel = new ModernPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        JLabel titleLabel = new JLabel("Sales Analytics");
+        titleLabel.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
+        titleLabel.setForeground(new java.awt.Color(52, 73, 94));
+        titlePanel.add(titleLabel);
 
         // Create refresh button
-        refreshButton = new JButton("Refresh Data");
+        refreshButton = new Button();
+        refreshButton.setText("Refresh Data");
+        refreshButton.setBackground(new java.awt.Color(23, 162, 184));
+        refreshButton.setForeground(java.awt.Color.WHITE);
+        refreshButton.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 12));
         refreshButton.addActionListener(e -> loadSalesData());
         titlePanel.add(refreshButton);
 
         // Create export button
-        exportButton = new JButton("Export to Excel");
+        exportButton = new Button();
+        exportButton.setText("Export to Excel");
+        exportButton.setBackground(new java.awt.Color(40, 167, 69));
+        exportButton.setForeground(java.awt.Color.WHITE);
+        exportButton.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 12));
         exportButton.addActionListener(e -> exportSalesDataToExcel());
         titlePanel.add(exportButton);
 
         add(titlePanel, BorderLayout.NORTH);
 
-        // Create chart panel
+        // Create chart panel in a modern panel wrapper
         chartPanel = new SalesChartPanel();
-        add(chartPanel, BorderLayout.CENTER);
+        ModernPanel chartWrapper = new ModernPanel(new BorderLayout());
+        chartWrapper.add(chartPanel, BorderLayout.CENTER);
+        add(chartWrapper, BorderLayout.CENTER);
     }
 
     private void loadSalesData() {
@@ -95,10 +113,10 @@ public class SalesPanel extends JPanel {
                         workbook.write(fos);
                     }
                 }
-                JOptionPane.showMessageDialog(this, "Exported sales data to Excel successfully!");
+                ModernDialog.showMessageDialog(this, "Exported sales data to Excel successfully!", "Export Complete", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Failed to export Excel: " + ex.getMessage());
+            ModernDialog.showMessageDialog(this, "Failed to export Excel: " + ex.getMessage(), "Export Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

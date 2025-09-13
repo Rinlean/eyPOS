@@ -8,49 +8,63 @@ import java.util.ArrayList;
 import java.util.List;
 import componentStuff.DatabaseUtil;
 import componentStuff.ProductUpdateListener;
+import componentStuff.ModernTable;
+import componentStuff.ModernScrollPane;
+import componentStuff.ModernPanel;
 
 public class DashboardPanel extends JPanel implements ProductUpdateListener {
 
     private JLabel totalTransactionsLabel;
     private JLabel profitVsRevenueLabel;
-    private JTable topSellingProductsTable;
-    private JTable lowStockTable;
-    private JTable recentTransactionsTable;
+    private ModernTable topSellingProductsTable;
+    private ModernTable lowStockTable;
+    private ModernTable recentTransactionsTable;
 
     public DashboardPanel() {
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setBackground(new Color(248, 249, 250));
 
         // UI Structure
-        JPanel summaryPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+        ModernPanel summaryPanel = new ModernPanel(new GridLayout(1, 2, 15, 15));
         totalTransactionsLabel = new JLabel("Total Transactions: --");
         profitVsRevenueLabel = new JLabel("Profit: -- | Revenue: --");
-        totalTransactionsLabel.setFont(totalTransactionsLabel.getFont().deriveFont(Font.BOLD, 16f));
-        profitVsRevenueLabel.setFont(profitVsRevenueLabel.getFont().deriveFont(Font.BOLD, 16f));
-        summaryPanel.add(totalTransactionsLabel);
-        summaryPanel.add(profitVsRevenueLabel);
+        
+        // Style summary labels
+        Font summaryFont = new Font("Arial", Font.BOLD, 16);
+        totalTransactionsLabel.setFont(summaryFont);
+        profitVsRevenueLabel.setFont(summaryFont);
+        totalTransactionsLabel.setForeground(new Color(52, 73, 94));
+        profitVsRevenueLabel.setForeground(new Color(52, 73, 94));
+        totalTransactionsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        profitVsRevenueLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        ModernPanel totalTransPanel = new ModernPanel(new BorderLayout());
+        totalTransPanel.add(totalTransactionsLabel, BorderLayout.CENTER);
+        ModernPanel profitRevenuePanel = new ModernPanel(new BorderLayout());
+        profitRevenuePanel.add(profitVsRevenueLabel, BorderLayout.CENTER);
+        
+        summaryPanel.add(totalTransPanel);
+        summaryPanel.add(profitRevenuePanel);
 
-        JPanel midPanel = new JPanel(new GridLayout(1, 2, 10, 10));
-        topSellingProductsTable = new JTable();
-        lowStockTable = new JTable();
-        midPanel.add(createTitledPanel("Top-Selling Products", new JScrollPane(topSellingProductsTable)));
-        midPanel.add(createTitledPanel("Low Stock Alerts", new JScrollPane(lowStockTable)));
+        ModernPanel midPanel = new ModernPanel(new GridLayout(1, 2, 15, 15));
+        topSellingProductsTable = new ModernTable();
+        lowStockTable = new ModernTable();
+        
+        midPanel.add(ModernPanel.createTitledPanel("Top-Selling Products", 
+            ModernPanel.createCenteredPanel(new ModernScrollPane(topSellingProductsTable))));
+        midPanel.add(ModernPanel.createTitledPanel("Low Stock Alerts", 
+            ModernPanel.createCenteredPanel(new ModernScrollPane(lowStockTable))));
 
-        recentTransactionsTable = new JTable();
-        JPanel bottomPanel = createTitledPanel("Recent Transactions", new JScrollPane(recentTransactionsTable));
+        recentTransactionsTable = new ModernTable();
+        JPanel bottomPanel = ModernPanel.createTitledPanel("Recent Transactions", 
+            ModernPanel.createCenteredPanel(new ModernScrollPane(recentTransactionsTable)));
 
         add(summaryPanel, BorderLayout.NORTH);
         add(midPanel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
 
         loadData();
-    }
-
-    private JPanel createTitledPanel(String title, JComponent component) {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createTitledBorder(title));
-        panel.add(component, BorderLayout.CENTER);
-        return panel;
     }
 
     private void loadData() {

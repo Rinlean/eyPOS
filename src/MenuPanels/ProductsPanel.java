@@ -4,6 +4,12 @@ import DAOstuff.products.ProductDialog;
 import DAOstuff.products.Product;
 import DAOstuff.products.ProductsDAO;
 import componentStuff.ProductUpdateListener;
+import componentStuff.ModernTable;
+import componentStuff.ModernScrollPane;
+import componentStuff.ModernPanel;
+import componentStuff.ModernDialog;
+import componentStuff.MyTextField;
+import componentStuff.Button;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -12,21 +18,27 @@ import java.util.ArrayList;
 
 public class ProductsPanel extends JPanel {
 
-    private JTable productTable;
+    private ModernTable productTable;
     private DefaultTableModel tableModel;
     private boolean isAdmin;
-    private JTextField searchField;
+    private MyTextField searchField;
     private javax.swing.Timer debounceTimer;
     private List<ProductUpdateListener> updateListeners = new ArrayList<>();
 
     public ProductsPanel(boolean isAdmin) {
         this.isAdmin = isAdmin;
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setBackground(new Color(248, 249, 250));
 
         // Search bar (always shown)
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        searchField = new JTextField(20);
-        searchPanel.add(new JLabel("Search:"));
+        ModernPanel searchPanel = new ModernPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        searchField = new MyTextField();
+        searchField.setColumns(25);
+        JLabel searchLabel = new JLabel("Search:");
+        searchLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        searchLabel.setForeground(new Color(52, 73, 94));
+        searchPanel.add(searchLabel);
         searchPanel.add(searchField);
         add(searchPanel, BorderLayout.NORTH);
 
@@ -40,16 +52,32 @@ public class ProductsPanel extends JPanel {
                 return false;
             }
         };
-        productTable = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(productTable);
-        add(scrollPane, BorderLayout.CENTER);
+        productTable = new ModernTable(tableModel);
+        ModernScrollPane scrollPane = new ModernScrollPane(productTable);
+        JPanel tablePanel = ModernPanel.createCenteredPanel(scrollPane);
+        add(tablePanel, BorderLayout.CENTER);
 
         // Admin controls
         if (isAdmin) {
-            JPanel adminPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            JButton addBtn = new JButton("Add Product");
-            JButton editBtn = new JButton("Edit Product");
-            JButton delBtn = new JButton("Remove Product");
+            ModernPanel adminPanel = new ModernPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+            Button addBtn = new Button();
+            addBtn.setText("Add Product");
+            addBtn.setBackground(new Color(40, 167, 69));
+            addBtn.setForeground(Color.WHITE);
+            addBtn.setFont(new Font("Arial", Font.BOLD, 12));
+            
+            Button editBtn = new Button();
+            editBtn.setText("Edit Product");
+            editBtn.setBackground(new Color(255, 193, 7));
+            editBtn.setForeground(Color.BLACK);
+            editBtn.setFont(new Font("Arial", Font.BOLD, 12));
+            
+            Button delBtn = new Button();
+            delBtn.setText("Remove Product");
+            delBtn.setBackground(new Color(220, 53, 69));
+            delBtn.setForeground(Color.WHITE);
+            delBtn.setFont(new Font("Arial", Font.BOLD, 12));
+            
             adminPanel.add(addBtn);
             adminPanel.add(editBtn);
             adminPanel.add(delBtn);
@@ -59,7 +87,7 @@ public class ProductsPanel extends JPanel {
             editBtn.addActionListener(e -> {
                 int row = productTable.getSelectedRow();
                 if (row == -1) {
-                    JOptionPane.showMessageDialog(this, "Select a product to edit.");
+                    ModernDialog.showMessageDialog(this, "Select a product to edit.", "Edit Product", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
                 Product p = getProductFromRow(row);
@@ -68,10 +96,10 @@ public class ProductsPanel extends JPanel {
             delBtn.addActionListener(e -> {
                 int row = productTable.getSelectedRow();
                 if (row == -1) {
-                    JOptionPane.showMessageDialog(this, "Select a product to remove.");
+                    ModernDialog.showMessageDialog(this, "Select a product to remove.", "Remove Product", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
-                int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?", "Remove Product", JOptionPane.YES_NO_OPTION);
+                int confirm = ModernDialog.showConfirmDialog(this, "Are you sure you want to remove this product?", "Remove Product");
                 if (confirm == JOptionPane.YES_OPTION) {
                     int prodId = (int) tableModel.getValueAt(row, 0);
                     ProductsDAO.deleteProduct(prodId);
