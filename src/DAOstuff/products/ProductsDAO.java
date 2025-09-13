@@ -13,11 +13,20 @@ public class ProductsDAO {
         String query = "SELECT * FROM products";
         try (Connection conn = DatabaseUtil.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
             while (rs.next()) {
+                double msrp = 0.0;
+                try {
+                    msrp = rs.getDouble("MSRP");
+                    if (rs.wasNull()) msrp = 0.0;
+                } catch (SQLException e) {
+                    // Column might not exist yet, default to 0.0
+                    msrp = 0.0;
+                }
                 Product p = new Product(
                         rs.getInt("ProdId"),
                         rs.getString("ProdBarCode"),
                         rs.getString("ProdName"),
                         rs.getDouble("ProdPrice"),
+                        msrp,
                         rs.getString("ProdDesc"),
                         rs.getInt("Quantity")
                 );
@@ -40,11 +49,20 @@ public class ProductsDAO {
             stmt.setString(3, pattern);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
+                double msrp = 0.0;
+                try {
+                    msrp = rs.getDouble("MSRP");
+                    if (rs.wasNull()) msrp = 0.0;
+                } catch (SQLException e) {
+                    // Column might not exist yet, default to 0.0
+                    msrp = 0.0;
+                }
                 Product p = new Product(
                         rs.getInt("ProdId"),
                         rs.getString("ProdBarCode"),
                         rs.getString("ProdName"),
                         rs.getDouble("ProdPrice"),
+                        msrp,
                         rs.getString("ProdDesc"),
                         rs.getInt("Quantity")
                 );
@@ -58,13 +76,14 @@ public class ProductsDAO {
     }
 
     public static boolean addProduct(Product product) {
-        String sql = "INSERT INTO products (ProdBarCode, ProdName, ProdPrice, ProdDesc, Quantity) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO products (ProdBarCode, ProdName, ProdPrice, MSRP, ProdDesc, Quantity) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, product.getProdBarCode());
             stmt.setString(2, product.getProdName());
             stmt.setDouble(3, product.getProdPrice());
-            stmt.setString(4, product.getProdDesc());
-            stmt.setInt(5, product.getQuantity());
+            stmt.setDouble(4, product.getMsrp());
+            stmt.setString(5, product.getProdDesc());
+            stmt.setInt(6, product.getQuantity());
             stmt.executeUpdate();
             return true;
         } catch (SQLException ex) {
@@ -79,14 +98,15 @@ public class ProductsDAO {
     }
 
     public static boolean updateProduct(Product product) {
-        String sql = "UPDATE products SET ProdBarCode=?, ProdName=?, ProdPrice=?, ProdDesc=?, Quantity=? WHERE ProdId=?";
+        String sql = "UPDATE products SET ProdBarCode=?, ProdName=?, ProdPrice=?, MSRP=?, ProdDesc=?, Quantity=? WHERE ProdId=?";
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, product.getProdBarCode());
             stmt.setString(2, product.getProdName());
             stmt.setDouble(3, product.getProdPrice());
-            stmt.setString(4, product.getProdDesc());
-            stmt.setInt(5, product.getQuantity());
-            stmt.setInt(6, product.getProdId());
+            stmt.setDouble(4, product.getMsrp());
+            stmt.setString(5, product.getProdDesc());
+            stmt.setInt(6, product.getQuantity());
+            stmt.setInt(7, product.getProdId());
             stmt.executeUpdate();
             return true;
         } catch (SQLException ex) {

@@ -30,7 +30,7 @@ public class ProductsPanel extends JPanel {
         setupSearchDebounce();
 
         // Table columns
-        String[] columnNames = {"ID", "Barcode", "Name", "Price", "Description", "Quantity"};
+        String[] columnNames = {"ID", "Barcode", "Name", "Price", "MSRP", "Description", "Quantity"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -135,8 +135,9 @@ public class ProductsPanel extends JPanel {
                 (String) tableModel.getValueAt(row, 1),
                 (String) tableModel.getValueAt(row, 2),
                 Double.parseDouble(tableModel.getValueAt(row, 3).toString()),
-                (String) tableModel.getValueAt(row, 4),
-                (int) tableModel.getValueAt(row, 5)
+                Double.parseDouble(tableModel.getValueAt(row, 4).toString()),
+                (String) tableModel.getValueAt(row, 5),
+                (int) tableModel.getValueAt(row, 6)
         );
     }
 
@@ -152,6 +153,7 @@ public class ProductsPanel extends JPanel {
                 prod.getProdBarCode(),
                 prod.getProdName(),
                 prod.getProdPrice(),
+                prod.getMsrp(),
                 prod.getProdDesc(),
                 prod.getQuantity()
             });

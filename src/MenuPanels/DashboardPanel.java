@@ -100,14 +100,14 @@ public class DashboardPanel extends JPanel {
     /**
      * Returns [profit, revenue] as a double array.
      * - revenue = SUM(sales_items.quantity * sales_items.price)
-     * - profit = SUM(sales_items.quantity * (sales_items.price - products.ProdPrice))
-     *   (assuming ProdPrice is cost, adjust if not)
+     * - profit = SUM(sales_items.quantity * (sales_items.price - products.MSRP))
+     *   (using MSRP as cost)
      */
     private double[] getProfitAndRevenue() {
         double revenue = 0;
         double profit = 0;
         String sql = """
-            SELECT si.quantity, si.price, p.ProdPrice
+            SELECT si.quantity, si.price, p.MSRP
             FROM sales_items si
             JOIN products p ON si.product_id = p.ProdId
         """;
@@ -117,7 +117,14 @@ public class DashboardPanel extends JPanel {
             while (rs.next()) {
                 int qty = rs.getInt("quantity");
                 double price = rs.getDouble("price");      // sell price per unit
-                double cost = rs.getDouble("ProdPrice");   // cost per unit (assumed)
+                double cost = 0.0;
+                try {
+                    cost = rs.getDouble("MSRP");           // cost per unit
+                    if (rs.wasNull()) cost = 0.0;
+                } catch (SQLException e) {
+                    // If MSRP column doesn't exist, default to 0
+                    cost = 0.0;
+                }
                 revenue += qty * price;
                 profit += qty * (price - cost);
             }
