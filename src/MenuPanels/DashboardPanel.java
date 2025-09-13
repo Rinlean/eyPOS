@@ -174,7 +174,7 @@ public class DashboardPanel extends JPanel {
             ORDER BY Quantity ASC
             LIMIT 10
         """;
-        int lowStockThreshold = 5; // adjust as needed
+        int lowStockThreshold = 50; // adjust as needed
         try (Connection conn = DatabaseUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, lowStockThreshold);
