@@ -25,6 +25,9 @@ public class UserMgmtPanel extends JPanel {
             @Override public boolean isCellEditable(int row, int column) { return false; }
         };
         userTable = new ModernTable(tableModel);
+        // Increase table size for better visibility
+        userTable.setPreferredScrollableViewportSize(new Dimension(600, 350));
+        userTable.setRowHeight(35); // Increase row height for better readability
         ModernScrollPane scrollPane = new ModernScrollPane(userTable);
         JPanel tablePanel = ModernPanel.createCenteredPanel(scrollPane);
         add(tablePanel, BorderLayout.CENTER);
@@ -34,19 +37,22 @@ public class UserMgmtPanel extends JPanel {
         addBtn.setText("Add User");
         addBtn.setBackground(new Color(40, 167, 69));
         addBtn.setForeground(Color.WHITE);
-        addBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        addBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        addBtn.setPreferredSize(new Dimension(120, 35));
         
         Button editBtn = new Button();
         editBtn.setText("Edit User");
         editBtn.setBackground(new Color(255, 193, 7));
         editBtn.setForeground(Color.BLACK);
-        editBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        editBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        editBtn.setPreferredSize(new Dimension(120, 35));
         
         Button delBtn = new Button();
         delBtn.setText("Remove User");
         delBtn.setBackground(new Color(220, 53, 69));
         delBtn.setForeground(Color.WHITE);
-        delBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        delBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        delBtn.setPreferredSize(new Dimension(140, 35));
         
         adminPanel.add(addBtn);
         adminPanel.add(editBtn);

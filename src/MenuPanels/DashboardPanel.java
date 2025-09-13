@@ -49,7 +49,9 @@ public class DashboardPanel extends JPanel implements ProductUpdateListener {
 
         ModernPanel midPanel = new ModernPanel(new GridLayout(1, 2, 15, 15));
         topSellingProductsTable = new ModernTable();
+        topSellingProductsTable.setRowHeight(30); // Increase row height for better readability
         lowStockTable = new ModernTable();
+        lowStockTable.setRowHeight(30); // Increase row height for better readability
         
         midPanel.add(ModernPanel.createTitledPanel("Top-Selling Products", 
             ModernPanel.createCenteredPanel(new ModernScrollPane(topSellingProductsTable))));
@@ -57,12 +59,19 @@ public class DashboardPanel extends JPanel implements ProductUpdateListener {
             ModernPanel.createCenteredPanel(new ModernScrollPane(lowStockTable))));
 
         recentTransactionsTable = new ModernTable();
+        recentTransactionsTable.setRowHeight(30); // Increase row height for better readability
+        // Make the recent transactions table larger by giving it more space
+        recentTransactionsTable.setPreferredScrollableViewportSize(new Dimension(600, 200));
         JPanel bottomPanel = ModernPanel.createTitledPanel("Recent Transactions", 
             ModernPanel.createCenteredPanel(new ModernScrollPane(recentTransactionsTable)));
 
-        add(summaryPanel, BorderLayout.NORTH);
-        add(midPanel, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
+        // Use a more proportional layout giving more space to the transactions table
+        JPanel topSection = new JPanel(new BorderLayout(15, 15));
+        topSection.add(summaryPanel, BorderLayout.NORTH);
+        topSection.add(midPanel, BorderLayout.CENTER);
+        
+        add(topSection, BorderLayout.NORTH);
+        add(bottomPanel, BorderLayout.CENTER); // Give more space to transactions table
 
         loadData();
     }

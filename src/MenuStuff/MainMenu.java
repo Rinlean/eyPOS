@@ -120,13 +120,13 @@ public class MainMenu extends JFrame {
         sidebar.add(Box.createVerticalGlue());
 
         migLayout = new MigLayout(
-                "insets 0, gap 0",
-                "[left][grow,fill]",
+                "insets 0, gap 0, fillx, filly",
+                "[" + sidebarCurrentWidth + "!][0:0,grow,fill]",
                 "[grow,fill]"
         );
         containerPanel = new JPanel(migLayout);
-        containerPanel.add(sidebar, "w " + sidebarCurrentWidth + "!, h 100%, dock west");
-        containerPanel.add(mainContent, "grow, push");
+        containerPanel.add(sidebar, "cell 0 0, grow, wmin " + sidebarCurrentWidth + ", wmax " + sidebarCurrentWidth);
+        containerPanel.add(mainContent, "cell 1 0, grow, push");
 
         JPanel topPanel = new JPanel(new BorderLayout());
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -158,6 +158,7 @@ public class MainMenu extends JFrame {
         welcomeLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 
         JButton logoutButton = new JButton("Logout");
+        logoutButton.setFont(new Font("Arial", Font.BOLD, 14));
         logoutButton.setFocusable(false);
         logoutButton.addActionListener(e -> {
             int confirm = ModernDialog.showConfirmDialog(this, "Are you sure you want to logout?", "Logout");
@@ -283,8 +284,9 @@ public class MainMenu extends JFrame {
     }
 
     private void updateSidebarWidth(int width) {
-        String constraint = "w " + width + "!, h 100%, dock west";
-        migLayout.setComponentConstraints(sidebar, constraint);
+        // Update the column constraint to maintain stable layout
+        migLayout.setColumnConstraints("[" + width + "!][0:0,grow,fill]");
+        migLayout.setComponentConstraints(sidebar, "cell 0 0, grow, wmin " + width + ", wmax " + width);
         containerPanel.revalidate();
         containerPanel.repaint();
     }

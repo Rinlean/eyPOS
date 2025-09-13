@@ -52,31 +52,36 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         // Product Table
         productModel = new DefaultTableModel(new String[]{"ID", "Name", "Price", "Stock"}, 0);
         productTable = new ModernTable(productModel);
+        productTable.setRowHeight(30); // Increase row height for better readability
         ModernScrollPane productScroll = new ModernScrollPane(productTable);
 
         // Cart Table
         cartModel = new DefaultTableModel(new String[]{"ID", "Name", "Price", "Qty", "Subtotal"}, 0);
         cartTable = new ModernTable(cartModel);
+        cartTable.setRowHeight(30); // Increase row height for better readability
         ModernScrollPane cartScroll = new ModernScrollPane(cartTable);
 
-        // Buttons and total
+        // Buttons and total - increased sizes for better visibility and usability
         Button addToCartBtn = new Button();
         addToCartBtn.setText("Add to Cart");
         addToCartBtn.setBackground(new Color(40, 167, 69));
         addToCartBtn.setForeground(Color.WHITE);
-        addToCartBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        addToCartBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        addToCartBtn.setPreferredSize(new Dimension(140, 45));
         
         Button removeFromCartBtn = new Button();
         removeFromCartBtn.setText("Remove Selected");
         removeFromCartBtn.setBackground(new Color(220, 53, 69));
         removeFromCartBtn.setForeground(Color.WHITE);
-        removeFromCartBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        removeFromCartBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        removeFromCartBtn.setPreferredSize(new Dimension(160, 45));
         
         Button checkoutBtn = new Button();
         checkoutBtn.setText("Check Out");
         checkoutBtn.setBackground(new Color(0, 123, 255));
         checkoutBtn.setForeground(Color.WHITE);
-        checkoutBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        checkoutBtn.setFont(new Font("Arial", Font.BOLD, 18));
+        checkoutBtn.setPreferredSize(new Dimension(140, 50));
         
         totalLabel = new JLabel("Total: Php 0.00");
         totalLabel.setFont(new Font("Arial", Font.BOLD, 16));

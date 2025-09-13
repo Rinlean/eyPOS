@@ -39,21 +39,23 @@ public class SalesPanel extends JPanel {
         titleLabel.setForeground(new java.awt.Color(52, 73, 94));
         titlePanel.add(titleLabel);
 
-        // Create refresh button
+        // Create refresh button - made larger for better text fit
         refreshButton = new Button();
         refreshButton.setText("Refresh Data");
         refreshButton.setBackground(new java.awt.Color(23, 162, 184));
         refreshButton.setForeground(java.awt.Color.WHITE);
-        refreshButton.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 12));
+        refreshButton.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 16));
+        refreshButton.setPreferredSize(new Dimension(150, 40));
         refreshButton.addActionListener(e -> loadSalesData());
         titlePanel.add(refreshButton);
 
-        // Create export button
+        // Create export button - made larger for better text fit
         exportButton = new Button();
         exportButton.setText("Export to Excel");
         exportButton.setBackground(new java.awt.Color(40, 167, 69));
         exportButton.setForeground(java.awt.Color.WHITE);
-        exportButton.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 12));
+        exportButton.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 16));
+        exportButton.setPreferredSize(new Dimension(170, 40));
         exportButton.addActionListener(e -> exportSalesDataToExcel());
         titlePanel.add(exportButton);
 
