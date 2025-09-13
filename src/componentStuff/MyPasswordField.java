@@ -10,6 +10,8 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter; 
+import java.awt.Cursor;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPasswordField;
@@ -22,21 +24,16 @@ public class MyPasswordField extends JPasswordField {
     private final char defaultEchoChar;
 
     public MyPasswordField() {
-        // --- Start of New Code ---
 
-        // TODO: Replace with your actual icon paths
         this.showIcon = new ImageIcon(getClass().getResource("/imageStuff/pass1.png"));
         this.hideIcon = new ImageIcon(getClass().getResource("/imageStuff/pass2.png"));
-        this.defaultEchoChar = getEchoChar(); // Store the default echo character (usually '*')
+        this.defaultEchoChar = getEchoChar();
 
-        // Set the initial suffix icon to the "hide" icon
         setSuffixIcon(hideIcon);
 
-        // Add a mouse listener to handle clicks on the icon
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Define the clickable area for the suffix icon
                 if (suffixIcon != null) {
                     int iconX = getWidth() - suffixIcon.getIconWidth() - 10;
                     int iconY = (getHeight() - suffixIcon.getIconHeight()) / 2;
@@ -44,14 +41,32 @@ public class MyPasswordField extends JPasswordField {
                     int iconHeight = suffixIcon.getIconHeight();
                     Rectangle iconBounds = new Rectangle(iconX, iconY, iconWidth, iconHeight);
 
-                    // Check if the click was inside the icon's bounds
                     if (iconBounds.contains(e.getPoint())) {
                         togglePasswordVisibility();
                     }
                 }
             }
         });
-        // --- End of New Code ---
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if (suffixIcon != null) {
+                    int iconX = getWidth() - suffixIcon.getIconWidth() - 10;
+                    int iconY = (getHeight() - suffixIcon.getIconHeight()) / 2;
+                    int iconWidth = suffixIcon.getIconWidth();
+                    int iconHeight = suffixIcon.getIconHeight();
+                    Rectangle iconBounds = new Rectangle(iconX, iconY, iconWidth, iconHeight);
+
+                    if (iconBounds.contains(e.getPoint())) {
+                        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    } else {
+                        setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+                    }
+                } else {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+                }
+            }
+        });
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setBackground(new Color(0, 0, 0, 0));
@@ -59,22 +74,17 @@ public class MyPasswordField extends JPasswordField {
         setFont(new java.awt.Font("sansserif", 0, 13));
         setSelectionColor(new Color(75, 175, 152));
     }
-    
-    // Method to toggle password visibility
+
     private void togglePasswordVisibility() {
         showPassword = !showPassword;
         if (showPassword) {
-            // Show password: set echo char to 0 and switch to the "show" icon
             setEchoChar((char) 0);
             setSuffixIcon(showIcon);
         } else {
-            // Hide password: restore default echo char and switch to the "hide" icon
             setEchoChar(defaultEchoChar);
             setSuffixIcon(hideIcon);
         }
     }
-    
-    // --- The rest of your existing code ---
 
     public String getHint() {
         return hint;

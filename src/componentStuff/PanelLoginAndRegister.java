@@ -49,12 +49,19 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         signupButton.setBackground(new Color(167, 134, 193));
         signupButton.setForeground(new Color(250, 250, 250));
         signupButton.setText("Sign Up");
-        signupButton.addActionListener(e -> {
-            String username = txtUser.getText();
-            String password = new String(txtPasswordField.getPassword());
 
-            if (username.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Username and password cannot be empty!");
+        signupButton.addActionListener(e -> {
+            String username = txtUser.getText().trim();
+            String password = new String(txtPasswordField.getPassword()).trim();
+            String confirmPassword = new String(txtchkPasswordField.getPassword()).trim();
+
+            if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Username and password fields cannot be empty!");
+                return;
+            }
+
+            if (!password.equals(confirmPassword)) {
+                JOptionPane.showMessageDialog(this, "Passwords do not match!");
                 return;
             }
 
@@ -135,7 +142,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             }
         });
         login.add(loginButton, "w 40%, h 40");
-        
+
         txtUser.addActionListener(e -> txtPasswordField.requestFocusInWindow());
         txtPasswordField.addActionListener(e -> loginButton.doClick());
     }

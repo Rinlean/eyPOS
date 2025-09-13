@@ -8,9 +8,9 @@ import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
-import javax.swing.JButton;
-import componentStuff.RoundButton;
+import componentStuff.Button;
 import java.awt.Color;
+import java.awt.Font;
 
 public class LoginMenu extends javax.swing.JFrame {
 
@@ -31,19 +31,32 @@ public class LoginMenu extends javax.swing.JFrame {
     }
 
     private void CloseButton() {
-        RoundButton btnClose = new RoundButton();
-        btnClose.setBackground(new Color(41, 39, 76));
-        btnClose.setForeground(new Color(0, 0, 0));
+        Button btnClose = new Button();
         btnClose.setText("X");
-        btnClose.setBounds(getWidth() - 50, 10, 40, 40); // Make width=height for a circle
+        btnClose.setFont(new java.awt.Font("Arial Black", Font.PLAIN, 18));
+        btnClose.setForeground(new Color(209, 209, 209));
+        btnClose.setBackground(new Color(0, 0, 0, 0));
+        btnClose.setBorderPainted(false);
+        btnClose.setFocusPainted(false);
+        btnClose.setContentAreaFilled(false);
+        btnClose.setOpaque(false);
+        btnClose.setBounds(getWidth() - 45, 8, 35, 35);
 
         btnClose.addActionListener(e -> System.exit(0));
-
         getLayeredPane().add(btnClose, bg.DRAG_LAYER);
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
-                btnClose.setLocation(getWidth() - 50, 10);
+                btnClose.setLocation(getWidth() - 45, 8);
+            }
+        });
+        btnClose.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnClose.setForeground(Color.RED);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnClose.setForeground(new Color(209, 209, 209));
             }
         });
     }
