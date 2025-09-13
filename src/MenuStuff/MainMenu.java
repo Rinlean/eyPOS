@@ -51,7 +51,7 @@ public class MainMenu extends JFrame {
         }
     }
 
-    // --------- EDIT SECTION: add/remove menu buttons here ----------
+    // --------- eyyy pag addn stuff ----------
     private final List<SidebarButtonDef> buttonDefs = Arrays.asList(
             new SidebarButtonDef("Check Out", "/imagestuff/mail.png", "ChckOut", false, CheckoutPanel::new),
             new SidebarButtonDef("Dashboard", "/imagestuff/mail.png", "Dashboard", false, DashboardPanel::new),
@@ -122,12 +122,29 @@ public class MainMenu extends JFrame {
         toggleButton.addActionListener(e -> toggleSidebar());
         leftPanel.add(toggleButton);
 
+        // --- ADD THIS SECTION FOR LOGOUT ---
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        rightPanel.setOpaque(false);
+
         JLabel welcomeLabel = new JLabel("Welcome, " + username + " (" + role + ")");
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        welcomeLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-        topPanel.add(leftPanel, BorderLayout.WEST);
-        topPanel.add(welcomeLabel, BorderLayout.CENTER);
+        welcomeLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.setFocusable(false);
+        logoutButton.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                dispose();
+                new LoginMenu().setVisible(true);
+            }
+        });
+
+        rightPanel.add(welcomeLabel);
+        rightPanel.add(logoutButton);
+
+        topPanel.add(leftPanel, BorderLayout.WEST);
+        topPanel.add(rightPanel, BorderLayout.EAST);
         setLayout(new BorderLayout());
         add(topPanel, BorderLayout.NORTH);
         add(containerPanel, BorderLayout.CENTER);

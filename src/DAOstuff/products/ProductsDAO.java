@@ -110,4 +110,18 @@ public class ProductsDAO {
             JOptionPane.showMessageDialog(null, "Failed to delete product: " + ex.getMessage());
         }
     }
+
+    public static boolean updateProductStock(int prodId, int newQuantity) {
+        String sql = "UPDATE products SET Quantity=? WHERE ProdId=?";
+        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, newQuantity);
+            stmt.setInt(2, prodId);
+            int updatedRows = stmt.executeUpdate();
+            return updatedRows > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to update product stock: " + ex.getMessage());
+            return false;
+        }
+    }
 }
