@@ -22,9 +22,22 @@ public class UserMgmtPanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         JPanel adminPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton addBtn = new JButton("Add User");
         JButton editBtn = new JButton("Edit User");
+        JButton delBtn = new JButton("Remove User");
+        adminPanel.add(addBtn);
         adminPanel.add(editBtn);
+        adminPanel.add(delBtn);
         add(adminPanel, BorderLayout.NORTH);
+
+        addBtn.addActionListener(e -> {
+            UserDialog dialog = new UserDialog(SwingUtilities.getWindowAncestor(this), null, false);
+            dialog.setVisible(true);
+            if (dialog.isSaved()) {
+                boolean success = UserDAO.addUser(dialog.getUser());
+                if (success) refreshUserList();
+            }
+        });
 
         editBtn.addActionListener(e -> {
             int row = userTable.getSelectedRow();
@@ -33,10 +46,28 @@ public class UserMgmtPanel extends JPanel {
                 return;
             }
             User u = getUserFromRow(row);
-            UserDialog dialog = new UserDialog(SwingUtilities.getWindowAncestor(this), u);
+            UserDialog dialog = new UserDialog(SwingUtilities.getWindowAncestor(this), u, true);
             dialog.setVisible(true);
             if (dialog.isSaved()) {
                 boolean success = UserDAO.updateUser(dialog.getUser());
+                if (success) refreshUserList();
+            }
+        });
+
+        delBtn.addActionListener(e -> {
+            int row = userTable.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "Select a user to remove.");
+                return;
+            }
+            User u = getUserFromRow(row);
+            if (u.getUsername().equals("admin")) {
+                JOptionPane.showMessageDialog(this, "Cannot remove the main admin account.");
+                return;
+            }
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to remove this user?", "Remove User", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                boolean success = UserDAO.deleteUser(u.getUserId());
                 if (success) refreshUserList();
             }
         });
@@ -65,6 +96,7 @@ public class UserMgmtPanel extends JPanel {
             });
         }
     }
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
