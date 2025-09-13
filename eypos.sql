@@ -77,7 +77,6 @@ CREATE TABLE `sales` (
   `sale_id` int(11) NOT NULL,
   `sale_date` datetime NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `payment_method` varchar(50) DEFAULT NULL,
   `amount_received` decimal(10,2) NOT NULL DEFAULT 0.00,
   `change_given` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -86,11 +85,11 @@ CREATE TABLE `sales` (
 -- Dumping data for table `sales`
 --
 
-INSERT INTO `sales` (`sale_id`, `sale_date`, `total_amount`, `payment_method`, `amount_received`, `change_given`) VALUES
-(1, '2025-09-10 18:14:29', 420.00, NULL, 0.00, 0.00),
-(2, '2025-09-11 18:19:48', 70.00, NULL, 0.00, 0.00),
-(3, '2025-09-13 18:25:30', 805.00, NULL, 1000.00, 195.00),
-(4, '2025-09-13 21:23:12', 85.00, NULL, 100.00, 15.00);
+INSERT INTO `sales` (`sale_id`, `sale_date`, `total_amount`, `amount_received`, `change_given`) VALUES
+(1, '2025-09-10 18:14:29', 420.00, 0.00, 0.00),
+(2, '2025-09-11 18:19:48', 70.00, 0.00, 0.00),
+(3, '2025-09-13 18:25:30', 805.00, 1000.00, 195.00),
+(4, '2025-09-13 21:23:12', 85.00, 100.00, 15.00);
 
 -- --------------------------------------------------------
 
