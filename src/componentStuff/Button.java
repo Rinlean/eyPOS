@@ -34,6 +34,7 @@ public class Button extends JButton {
     private Color effectColor = new Color(255, 255, 255);
 
     public Button() {
+        setOpaque(true);
         setContentAreaFilled(false);
         setBorder(new EmptyBorder(5, 0, 5, 0));
         setBackground(Color.WHITE);
@@ -69,20 +70,23 @@ public class Button extends JButton {
 
     @Override
     protected void paintComponent(Graphics grphcs) {
-        int width = getWidth();
-        int height = getHeight();
-        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = img.createGraphics();
+        // Draw rounded background
+        Graphics2D g2 = (Graphics2D) grphcs.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(getBackground());
-        g2.fillRoundRect(0, 0, width, height, height, height);
-        if (pressedPoint != null) {
-            g2.setColor(effectColor);
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
-            g2.fillOval((int) (pressedPoint.x - animatSize / 2), (int) (pressedPoint.y - animatSize / 2), (int) animatSize, (int) animatSize);
-        }
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), getHeight(), getHeight());
         g2.dispose();
-        grphcs.drawImage(img, 0, 0, null);
-        super.paintComponent(grphcs);
+
+        super.paintComponent(grphcs); // Draw text and icon
+
+        // Draw ripple effect
+        if (pressedPoint != null) {
+            Graphics2D g3 = (Graphics2D) grphcs.create();
+            g3.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g3.setColor(effectColor);
+            g3.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
+            g3.fillOval((int) (pressedPoint.x - animatSize / 2), (int) (pressedPoint.y - animatSize / 2), (int) animatSize, (int) animatSize);
+            g3.dispose();
+        }
     }
 }
