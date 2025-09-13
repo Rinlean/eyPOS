@@ -94,6 +94,21 @@ INSERT INTO `sales_items` (`item_id`, `sale_id`, `product_id`, `quantity`, `pric
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `product_price_history`
+--
+
+CREATE TABLE `product_price_history` (
+  `history_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `old_price` decimal(10,2) NOT NULL,
+  `new_price` decimal(10,2) NOT NULL,
+  `change_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `changed_by` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -116,6 +131,13 @@ INSERT INTO `users` (`id`, `username`, `password`, `type`) VALUES
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `product_price_history`
+--
+ALTER TABLE `product_price_history`
+  ADD PRIMARY KEY (`history_id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `products`
@@ -149,6 +171,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `product_price_history`
+--
+ALTER TABLE `product_price_history`
+  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
@@ -175,6 +203,12 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `product_price_history`
+--
+ALTER TABLE `product_price_history`
+  ADD CONSTRAINT `product_price_history_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`ProdId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `sales_items`

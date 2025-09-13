@@ -5,6 +5,7 @@ import DAOstuff.products.ProductsDAO;
 import DAOstuff.sales.Sale;
 import DAOstuff.sales.SaleItem;
 import DAOstuff.sales.SaleDAO;
+import componentStuff.ProductUpdateListener;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.sql.SQLException;
 
-public class CheckoutPanel extends JPanel {
+public class CheckoutPanel extends JPanel implements ProductUpdateListener {
 
     private JTable productTable;
     private JTable cartTable;
@@ -145,7 +146,7 @@ public class CheckoutPanel extends JPanel {
         try {
             double total = 0;
             for (CartItem item : cart) {
-                total += item.qty * item.product.getProdPrice();
+                total += item.qty * item.priceAtTimeOfSale; // Use stored price
             }
             double received = Double.parseDouble(amountReceivedField.getText());
             double change = received - total;
@@ -214,11 +215,11 @@ public class CheckoutPanel extends JPanel {
         cartModel.setRowCount(0);
         double total = 0;
         for (CartItem item : cart) {
-            double subtotal = item.qty * item.product.getProdPrice();
+            double subtotal = item.qty * item.priceAtTimeOfSale; // Use stored price
             cartModel.addRow(new Object[]{
                     item.product.getProdId(),
                     item.product.getProdName(),
-                    item.product.getProdPrice(),
+                    item.priceAtTimeOfSale, // Show stored price
                     item.qty,
                     subtotal
             });
@@ -235,7 +236,7 @@ public class CheckoutPanel extends JPanel {
         }
         double total = 0;
         for (CartItem item : cart) {
-            total += item.qty * item.product.getProdPrice();
+            total += item.qty * item.priceAtTimeOfSale; // Use stored price
         }
         double received;
         try {
@@ -273,7 +274,7 @@ public class CheckoutPanel extends JPanel {
             saleItems.add(new SaleItem(
                     item.product.getProdId(),
                     item.qty,
-                    item.product.getProdPrice()
+                    item.priceAtTimeOfSale // Use stored price, not current product price
             ));
         }
 
@@ -301,11 +302,19 @@ public class CheckoutPanel extends JPanel {
 
         Product product;
         int qty;
+        double priceAtTimeOfSale; // Store price when added to cart
 
         CartItem(Product product, int qty) {
             this.product = product;
             this.qty = qty;
+            this.priceAtTimeOfSale = product.getProdPrice(); // Capture current price
         }
+    }
+
+    @Override
+    public void onProductsUpdated() {
+        // Refresh the product list when products are updated
+        loadProducts();
     }
 
     @SuppressWarnings("unchecked")
