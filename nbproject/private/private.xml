@@ -3,7 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Rin/Documents/NetBeansProjects/eyPOS/src/LoginMenu.java</file>
+            <file>file:/C:/Users/Rin/Documents/GitHub/eyPOS/src/MenuStuff/MainMenu.java</file>
+            <file>file:/C:/Users/Rin/Documents/GitHub/eyPOS/src/MenuPanels/SalesPanel.java</file>
+            <file>file:/C:/Users/Rin/Documents/GitHub/eyPOS/src/MenuPanels/ProductsPanel.java</file>
+            <file>file:/C:/Users/Rin/Documents/GitHub/eyPOS/src/MenuPanels/UserMgmtPanel.java</file>
         </group>
     </open-files>
 </project-private>
