@@ -7,8 +7,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import componentStuff.DatabaseUtil;
+import componentStuff.ProductUpdateListener;
 
-public class DashboardPanel extends JPanel {
+public class DashboardPanel extends JPanel implements ProductUpdateListener {
 
     private JLabel totalTransactionsLabel;
     private JLabel profitVsRevenueLabel;
@@ -225,6 +226,12 @@ public class DashboardPanel extends JPanel {
             ex.printStackTrace();
         }
         return results;
+    }
+
+    @Override
+    public void onProductsUpdated() {
+        // Refresh the dashboard data when products are updated
+        loadData();
     }
 
     @SuppressWarnings("unchecked")

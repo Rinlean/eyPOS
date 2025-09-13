@@ -66,6 +66,7 @@ public class MainMenu extends JFrame {
     // Store references to panels for cross-panel communication
     private CheckoutPanel checkoutPanel;
     private ProductsPanel productsPanel;
+    private DashboardPanel dashboardPanel;
 
     public MainMenu(String username, String role) {
         this.isAdmin = "admin".equalsIgnoreCase(role);
@@ -84,11 +85,13 @@ public class MainMenu extends JFrame {
         mainContent = new JPanel(cardLayout);
 
         // Create panels first so we can connect them
-        checkoutPanel = new CheckoutPanel();
         productsPanel = new ProductsPanel(isAdmin);
+        checkoutPanel = new CheckoutPanel(productsPanel);
+        dashboardPanel = new DashboardPanel();
         
-        // Connect panels - products panel notifies checkout panel of updates
+        // Connect panels - products panel notifies checkout and dashboard panels of updates
         productsPanel.addUpdateListener(checkoutPanel);
+        productsPanel.addUpdateListener(dashboardPanel);
 
         sidebar.add(Box.createVerticalGlue());
         for (SidebarButtonDef def : buttonDefs) {
@@ -106,6 +109,8 @@ public class MainMenu extends JFrame {
                 panel = checkoutPanel;
             } else if ("Products".equals(def.cardName)) {
                 panel = productsPanel;
+            } else if ("Dashboard".equals(def.cardName)) {
+                panel = dashboardPanel;
             } else {
                 panel = def.panelSupplier.get();
             }

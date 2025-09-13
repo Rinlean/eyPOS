@@ -149,6 +149,11 @@ public class ProductsPanel extends JPanel {
         setTableData(ProductsDAO.getAllProducts());
     }
 
+    public void refreshAndNotify() {
+        refreshProductList();
+        notifyUpdateListeners();
+    }
+
     public void addUpdateListener(ProductUpdateListener listener) {
         updateListeners.add(listener);
     }

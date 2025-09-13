@@ -26,6 +26,7 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
     private List<CartItem> cart = new ArrayList<>();
     private ProductsDAO productDAO = new ProductsDAO();
     private SaleDAO saleDAO = new SaleDAO();
+    private ProductsPanel productsPanel; // Reference to trigger notifications
 
     // Payment and numpad fields
     private JTextField amountReceivedField;
@@ -33,6 +34,11 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
     private JPanel numpadPanel;
 
     public CheckoutPanel() {
+        this(null); // Default constructor for backward compatibility
+    }
+
+    public CheckoutPanel(ProductsPanel productsPanel) {
+        this.productsPanel = productsPanel;
         setLayout(new BorderLayout());
 
         // Product Table
@@ -296,6 +302,11 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         loadProducts();
         amountReceivedField.setText("");
         changeField.setText("");
+        
+        // Notify other panels of product changes (stock updates)
+        if (productsPanel != null) {
+            productsPanel.refreshAndNotify();
+        }
     }
 
     private static class CartItem {
