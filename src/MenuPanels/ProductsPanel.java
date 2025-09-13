@@ -3,10 +3,12 @@ package MenuPanels;
 import DAOstuff.products.ProductDialog;
 import DAOstuff.products.Product;
 import DAOstuff.products.ProductsDAO;
+import componentStuff.ProductUpdateListener;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import java.util.ArrayList;
 
 public class ProductsPanel extends JPanel {
 
@@ -15,6 +17,7 @@ public class ProductsPanel extends JPanel {
     private boolean isAdmin;
     private JTextField searchField;
     private javax.swing.Timer debounceTimer;
+    private List<ProductUpdateListener> updateListeners = new ArrayList<>();
 
     public ProductsPanel(boolean isAdmin) {
         this.isAdmin = isAdmin;
@@ -125,6 +128,7 @@ public class ProductsPanel extends JPanel {
             }
             if (success) {
                 refreshProductList();
+                notifyUpdateListeners(); // Notify other panels
             }
         }
     }
@@ -143,6 +147,16 @@ public class ProductsPanel extends JPanel {
 
     public void refreshProductList() {
         setTableData(ProductsDAO.getAllProducts());
+    }
+
+    public void addUpdateListener(ProductUpdateListener listener) {
+        updateListeners.add(listener);
+    }
+
+    private void notifyUpdateListeners() {
+        for (ProductUpdateListener listener : updateListeners) {
+            listener.onProductsUpdated();
+        }
     }
 
     private void setTableData(List<Product> products) {

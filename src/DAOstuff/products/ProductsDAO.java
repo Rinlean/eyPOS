@@ -98,6 +98,22 @@ public class ProductsDAO {
     }
 
     public static boolean updateProduct(Product product) {
+        // First get the current price to track history
+        String selectSql = "SELECT ProdPrice FROM products WHERE ProdId=?";
+        double oldPrice = 0.0;
+        try (Connection conn = DatabaseUtil.getConnection(); 
+             PreparedStatement selectStmt = conn.prepareStatement(selectSql)) {
+            selectStmt.setInt(1, product.getProdId());
+            ResultSet rs = selectStmt.executeQuery();
+            if (rs.next()) {
+                oldPrice = rs.getDouble("ProdPrice");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to get current price: " + ex.getMessage());
+            return false;
+        }
+
         String sql = "UPDATE products SET ProdBarCode=?, ProdName=?, ProdPrice=?, MSRP=?, ProdDesc=?, Quantity=? WHERE ProdId=?";
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, product.getProdBarCode());
@@ -108,6 +124,18 @@ public class ProductsDAO {
             stmt.setInt(6, product.getQuantity());
             stmt.setInt(7, product.getProdId());
             stmt.executeUpdate();
+            
+            // If price changed, record the history
+            if (oldPrice != product.getProdPrice()) {
+                HistoricalPrice history = new HistoricalPrice(
+                    product.getProdId(), 
+                    oldPrice, 
+                    product.getProdPrice(), 
+                    "admin" // Could be enhanced to track actual user
+                );
+                HistoricalPriceDAO.addPriceHistory(history);
+            }
+            
             return true;
         } catch (SQLException ex) {
             if (ex.getSQLState() != null && ex.getSQLState().startsWith("23")) {
