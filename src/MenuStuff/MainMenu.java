@@ -10,6 +10,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
+import java.util.function.Supplier;
+
+// Import modular menu panels
+import MenuPanels.DashboardPanel;
+import MenuPanels.SalesPanel;
+import MenuPanels.ProductsPanel;
+import MenuPanels.UserMgmtPanel;
 
 public class MainMenu extends JFrame {
 
@@ -31,30 +38,33 @@ public class MainMenu extends JFrame {
     private final Border iconPadding = new EmptyBorder(0, 16, 0, 0);
     private final Border noPadding = new EmptyBorder(0, 0, 0, 0);
 
+    // Only edit this definition to add/remove panels!
     private static class SidebarButtonDef {
 
         final String text;
         final String iconPath;
         final String cardName;
         final boolean adminOnly;
+        final Supplier<JPanel> panelSupplier;
 
-        SidebarButtonDef(String text, String iconPath, String cardName, boolean adminOnly) {
+        SidebarButtonDef(String text, String iconPath, String cardName, boolean adminOnly, Supplier<JPanel> panelSupplier) {
             this.text = text;
             this.iconPath = iconPath;
             this.cardName = cardName;
             this.adminOnly = adminOnly;
+            this.panelSupplier = panelSupplier;
         }
     }
 
-    //to add/remove/reorder sidebar menu buttons:
+    // --------- EDIT SECTION: add/remove menu buttons here ----------
     private final List<SidebarButtonDef> buttonDefs = Arrays.asList(
-            new SidebarButtonDef("Dashboard", "/imagestuff/mail.png", "Dashboard", false),
-            new SidebarButtonDef("Sales", "/imagestuff/mail.png", "Sales", false),
-            new SidebarButtonDef("Products", "/imagestuff/mail.png", "Products", false),
-            new SidebarButtonDef("Products", "/imagestuff/mail.png", "Products", false),
-            new SidebarButtonDef("User Management", "/imagestuff/mail.png", "UserMgmt", true)
+            new SidebarButtonDef("Dashboard", "/imagestuff/mail.png", "Dashboard", false, DashboardPanel::new),
+            new SidebarButtonDef("Sales", "/imagestuff/mail.png", "Sales", false, SalesPanel::new),
+            new SidebarButtonDef("Products", "/imagestuff/mail.png", "Products", false, ProductsPanel::new),
+            new SidebarButtonDef("User Management", "/imagestuff/mail.png", "UserMgmt", true, UserMgmtPanel::new)
     );
-    //no more to edit further here
+    // ---------------------------------------------------------------
+
     private final List<Button> sidebarButtons = new ArrayList<>();
 
     public MainMenu(String username, String role) {
@@ -73,7 +83,6 @@ public class MainMenu extends JFrame {
         cardLayout = new CardLayout();
         mainContent = new JPanel(cardLayout);
 
-        // Use glue panels to center buttons vertically
         sidebar.add(Box.createVerticalGlue());
         for (SidebarButtonDef def : buttonDefs) {
             if (def.adminOnly && !isAdmin) {
@@ -83,7 +92,7 @@ public class MainMenu extends JFrame {
             sidebarButtons.add(btn);
             sidebar.add(btn);
             sidebar.add(Box.createVerticalStrut(5));
-            mainContent.add(createMenuPanel(def.text), def.cardName);
+            mainContent.add(def.panelSupplier.get(), def.cardName);
         }
         sidebar.add(Box.createVerticalGlue());
 
@@ -192,14 +201,6 @@ public class MainMenu extends JFrame {
             configureSidebarButton(sidebarButtons.get(i), def.text, collapsed);
             i++;
         }
-    }
-
-    private JPanel createMenuPanel(String name) {
-        JPanel panel = new JPanel(new GridBagLayout());
-        JLabel label = new JLabel(name + " Menau");
-        label.setFont(new Font("Arial", Font.BOLD, 28));
-        panel.add(label, new GridBagConstraints());
-        return panel;
     }
 
     private void toggleSidebar() {
