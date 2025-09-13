@@ -2,6 +2,8 @@ package DAOstuff.sales;
 
 import componentStuff.DatabaseUtil;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SaleDAO {
 
@@ -47,5 +49,32 @@ public class SaleDAO {
         } catch (SQLException e) {
             throw e;
         }
+    }
+    
+    /**
+     * Gets daily sales totals grouped by date.
+     * @return Map where key is date (YYYY-MM-DD format) and value is total sales amount
+     * @throws SQLException if database error occurs
+     */
+    public Map<String, Double> getDailySalesTotals() throws SQLException {
+        String query = "SELECT DATE(sale_date) as sale_day, SUM(total_amount) as daily_total " +
+                      "FROM sales " +
+                      "GROUP BY DATE(sale_date) " +
+                      "ORDER BY sale_day";
+        
+        Map<String, Double> dailyTotals = new HashMap<>();
+        
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            
+            while (rs.next()) {
+                String date = rs.getString("sale_day");
+                double total = rs.getDouble("daily_total");
+                dailyTotals.put(date, total);
+            }
+        }
+        
+        return dailyTotals;
     }
 }
