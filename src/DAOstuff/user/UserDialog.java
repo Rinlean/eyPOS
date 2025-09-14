@@ -2,13 +2,16 @@ package DAOstuff.user;
 
 import componentStuff.ModernPanel;
 import componentStuff.MyTextField;
+import componentStuff.MyPasswordField;
 import componentStuff.Button;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class UserDialog extends JDialog {
-    private MyTextField tfUsername, tfPassword;
+
+    private MyTextField tfUsername;
+    private MyPasswordField tfPassword;
     private JComboBox<String> cbType;
     private boolean saved = false;
     private User user;
@@ -23,8 +26,8 @@ public class UserDialog extends JDialog {
     public UserDialog(Window parent, User existing, boolean isEdit) {
         super(parent, isEdit ? "Edit User" : "Add User", ModalityType.APPLICATION_MODAL);
         setLayout(new BorderLayout());
-        setSize(450, 350);
-        setLocationRelativeTo(parent);
+        // Use a minimum size and pack() later so layout decides final sizes
+        setMinimumSize(new Dimension(450, 350));
         setBackground(BACKGROUND_COLOR);
         getContentPane().setBackground(BACKGROUND_COLOR);
 
@@ -32,81 +35,106 @@ public class UserDialog extends JDialog {
         ModernPanel headerPanel = new ModernPanel(new BorderLayout());
         headerPanel.setBackground(HEADER_COLOR);
         headerPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
-        
+
         JLabel titleLabel = new JLabel(isEdit ? "Edit User Account" : "Add New User");
         titleLabel.setFont(HEADER_FONT);
         titleLabel.setForeground(HEADER_TEXT_COLOR);
         headerPanel.add(titleLabel, BorderLayout.WEST);
         add(headerPanel, BorderLayout.NORTH);
 
-        // Content panel with modern styling
+        // Content panel
         ModernPanel contentPanel = new ModernPanel();
         contentPanel.setLayout(new GridBagLayout());
         contentPanel.setBorder(new EmptyBorder(25, 25, 20, 25));
         contentPanel.setBackground(BACKGROUND_COLOR);
-        
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(12, 0, 12, 15);
         gbc.anchor = GridBagConstraints.WEST;
 
-        // Initialize modern text fields
+        // Initialize text fields (place them here)
         tfUsername = new MyTextField();
-        tfUsername.setPreferredSize(new Dimension(250, 35));
-        tfPassword = new MyTextField();
-        tfPassword.setPreferredSize(new Dimension(250, 35));
-        
-        // Modern combo box styling
-        cbType = new JComboBox<>(new String[] {"admin", "user"});
-        cbType.setPreferredSize(new Dimension(250, 35));
+        tfUsername.setColumns(20);
+        tfUsername.setHint("Username");
+
+        tfPassword = new MyPasswordField();
+        tfPassword.setColumns(20);
+        tfPassword.setHint("Password");
+
+        // Combo box
+        cbType = new JComboBox<>(new String[]{"user", "admin"});
         cbType.setFont(new Font("Arial", Font.PLAIN, 12));
         cbType.setBackground(new Color(243, 224, 255));
 
-        // Add components with improved layout
         int row = 0;
-        
-        gbc.gridx = 0; gbc.gridy = row;
+
+        // Username
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
         JLabel usernameLabel = new JLabel("Username:");
         usernameLabel.setFont(LABEL_FONT);
         contentPanel.add(usernameLabel, gbc);
+
         gbc.gridx = 1;
+        gbc.gridy = row;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;  // stretch field
         contentPanel.add(tfUsername, gbc);
-        
+
+        // Password
         row++;
-        gbc.gridx = 0; gbc.gridy = row;
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
         JLabel passwordLabel = new JLabel("Password:");
         passwordLabel.setFont(LABEL_FONT);
         contentPanel.add(passwordLabel, gbc);
+
         gbc.gridx = 1;
+        gbc.gridy = row;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;  // stretch field
         contentPanel.add(tfPassword, gbc);
-        
+
+        // Type
         row++;
-        gbc.gridx = 0; gbc.gridy = row;
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
         JLabel typeLabel = new JLabel("User Type:");
         typeLabel.setFont(LABEL_FONT);
         contentPanel.add(typeLabel, gbc);
+
         gbc.gridx = 1;
+        gbc.gridy = row;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         contentPanel.add(cbType, gbc);
-        
+
         add(contentPanel, BorderLayout.CENTER);
 
-        // Modern button panel
+        // Buttons
         ModernPanel btnPanel = new ModernPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
         btnPanel.setBackground(BACKGROUND_COLOR);
-        
+
         Button saveBtn = new Button();
         saveBtn.setText("Save User");
         saveBtn.setBackground(new Color(40, 167, 69));
         saveBtn.setForeground(Color.WHITE);
         saveBtn.setFont(new Font("Arial", Font.BOLD, 14));
         saveBtn.setPreferredSize(new Dimension(120, 40));
-        
+
         Button cancelBtn = new Button();
         cancelBtn.setText("Cancel");
         cancelBtn.setBackground(new Color(108, 117, 125));
         cancelBtn.setForeground(Color.WHITE);
         cancelBtn.setFont(new Font("Arial", Font.BOLD, 14));
         cancelBtn.setPreferredSize(new Dimension(100, 40));
-        
+
         btnPanel.add(cancelBtn);
         btnPanel.add(saveBtn);
         add(btnPanel, BorderLayout.SOUTH);
@@ -117,14 +145,13 @@ public class UserDialog extends JDialog {
             tfPassword.setText(existing.getPassword());
             cbType.setSelectedItem(existing.getType());
             this.user = existing;
-            if (isEdit && existing.getUsername().equals("admin")) {
-                // Prevent changing username/type of master admin
+            if (isEdit && "admin".equals(existing.getUsername())) {
                 tfUsername.setEditable(false);
                 cbType.setEnabled(false);
-                
-                // Add warning label for admin account
+
                 row++;
-                gbc.gridx = 0; gbc.gridy = row;
+                gbc.gridx = 0;
+                gbc.gridy = row;
                 gbc.gridwidth = 2;
                 gbc.insets = new Insets(15, 0, 0, 0);
                 JLabel warningLabel = new JLabel("⚠ Master admin username and type cannot be changed");
@@ -134,28 +161,26 @@ public class UserDialog extends JDialog {
             }
         }
 
-        // Action listeners with modern error handling
+        // Actions
         saveBtn.addActionListener(e -> {
             try {
                 String username = tfUsername.getText().trim();
                 String password = tfPassword.getText().trim();
                 String type = (String) cbType.getSelectedItem();
-                
-                if (username.isEmpty() || password.isEmpty() || type.isEmpty()) {
+
+                if (username.isEmpty() || password.isEmpty() || type == null || type.isEmpty()) {
                     showErrorDialog("All fields are required.");
                     return;
                 }
-                
                 if (username.length() < 3) {
                     showErrorDialog("Username must be at least 3 characters long.");
                     return;
                 }
-                
                 if (password.length() < 4) {
                     showErrorDialog("Password must be at least 4 characters long.");
                     return;
                 }
-                
+
                 if (user == null) {
                     user = new User(0, username, password, type);
                 } else {
@@ -169,17 +194,25 @@ public class UserDialog extends JDialog {
                 showErrorDialog("Error saving user: " + ex.getMessage());
             }
         });
-        
+
         cancelBtn.addActionListener(e -> dispose());
-        
-        // Allow Enter key to save
+
         getRootPane().setDefaultButton(saveBtn);
+
+        // Let layout compute proper sizes and then center the dialog
+        pack();
+        setLocationRelativeTo(parent);
     }
-    
+
     private void showErrorDialog(String message) {
         JOptionPane.showMessageDialog(this, message, "Input Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    public boolean isSaved() { return saved; }
-    public User getUser() { return user; }
+    public boolean isSaved() {
+        return saved;
+    }
+
+    public User getUser() {
+        return user;
+    }
 }

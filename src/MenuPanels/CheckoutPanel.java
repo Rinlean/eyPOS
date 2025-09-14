@@ -68,21 +68,21 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         addToCartBtn.setForeground(Color.WHITE);
         addToCartBtn.setFont(new Font("Arial", Font.BOLD, 16));
         addToCartBtn.setPreferredSize(new Dimension(140, 45));
-        
+
         Button removeFromCartBtn = new Button();
         removeFromCartBtn.setText("Remove Selected");
         removeFromCartBtn.setBackground(new Color(220, 53, 69));
         removeFromCartBtn.setForeground(Color.WHITE);
         removeFromCartBtn.setFont(new Font("Arial", Font.BOLD, 16));
         removeFromCartBtn.setPreferredSize(new Dimension(160, 45));
-        
+
         Button checkoutBtn = new Button();
         checkoutBtn.setText("Check Out");
         checkoutBtn.setBackground(new Color(0, 123, 255));
         checkoutBtn.setForeground(Color.WHITE);
         checkoutBtn.setFont(new Font("Arial", Font.BOLD, 18));
         checkoutBtn.setPreferredSize(new Dimension(140, 50));
-        
+
         totalLabel = new JLabel("Total: Php 0.00");
         totalLabel.setFont(new Font("Arial", Font.BOLD, 16));
         totalLabel.setForeground(new Color(52, 73, 94));
@@ -98,7 +98,7 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         productsLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 10, 5));
         leftPanel.add(productsLabel, BorderLayout.NORTH);
         leftPanel.add(productScroll, BorderLayout.CENTER);
-        
+
         ModernPanel addButtonPanel = new ModernPanel(new FlowLayout(FlowLayout.CENTER));
         addButtonPanel.add(addToCartBtn);
         leftPanel.add(addButtonPanel, BorderLayout.SOUTH);
@@ -121,12 +121,12 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         // Payment fields vertically stacked above numpad - improved sizing and layout
         ModernPanel paymentFieldsPanel = new ModernPanel(new GridLayout(2, 2, 15, 12));
         paymentFieldsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        
+
         JLabel amountLabel = new JLabel("Amount Received:");
         amountLabel.setFont(new Font("Arial", Font.BOLD, 13));
         amountLabel.setForeground(new Color(52, 73, 94));
         paymentFieldsPanel.add(amountLabel);
-        
+
         // Make amount received field larger and more visible
         amountReceivedField = new MyTextField();
         amountReceivedField.setPreferredSize(new Dimension(160, 40)); // Increased height and width
@@ -138,7 +138,7 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         changeLabel.setFont(new Font("Arial", Font.BOLD, 13));
         changeLabel.setForeground(new Color(52, 73, 94));
         paymentFieldsPanel.add(changeLabel);
-        
+
         changeField = new MyTextField();
         changeField.setPreferredSize(new Dimension(160, 40)); // Match size with amount field
         changeField.setFont(new Font("Arial", Font.BOLD, 16)); // Larger font
@@ -201,9 +201,17 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
 
         // amountReceivedField listener
         amountReceivedField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { updateChange(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { updateChange(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { updateChange(); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                updateChange();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                updateChange();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                updateChange();
+            }
         });
 
         loadProducts();
@@ -253,9 +261,15 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         Product p = products.get(row);
 
         String qtyStr = ModernDialog.showInputDialog(this, "Enter quantity:", "Add to Cart", "1");
-        if (qtyStr == null) {
+        if (qtyStr == null) {  // user cancelled
             return;
         }
+        qtyStr = qtyStr.trim();
+        if (qtyStr.isEmpty()) {
+            ModernDialog.showMessageDialog(this, "Quantity cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         int qty;
         try {
             qty = Integer.parseInt(qtyStr);
@@ -298,11 +312,11 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         for (CartItem item : cart) {
             double subtotal = item.qty * item.priceAtTimeOfSale; // Use stored price
             cartModel.addRow(new Object[]{
-                    item.product.getProdId(),
-                    item.product.getProdName(),
-                    item.priceAtTimeOfSale, // Show stored price
-                    item.qty,
-                    subtotal
+                item.product.getProdId(),
+                item.product.getProdName(),
+                item.priceAtTimeOfSale, // Show stored price
+                item.qty,
+                subtotal
             });
             total += subtotal;
         }
@@ -332,9 +346,9 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         }
         int confirm = ModernDialog.showConfirmDialog(this,
                 "Total: Php " + String.format("%.2f", total)
-                        + "\nReceived: Php " + String.format("%.2f", received)
-                        + "\nChange: Php " + String.format("%.2f", received - total)
-                        + "\n\nConfirm checkout?", "Confirm Checkout");
+                + "\nReceived: Php " + String.format("%.2f", received)
+                + "\nChange: Php " + String.format("%.2f", received - total)
+                + "\n\nConfirm checkout?", "Confirm Checkout");
         if (confirm != JOptionPane.YES_OPTION) {
             return;
         }
@@ -377,7 +391,7 @@ public class CheckoutPanel extends JPanel implements ProductUpdateListener {
         loadProducts();
         amountReceivedField.setText("");
         changeField.setText("");
-        
+
         // Notify other panels of product changes (stock updates)
         if (productsPanel != null) {
             productsPanel.refreshAndNotify();

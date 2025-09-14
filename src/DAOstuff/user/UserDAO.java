@@ -46,7 +46,7 @@ public class UserDAO {
     }
 
     public static boolean updateUser(User user) {
-        String sql = "UPDATE users SET username=?, password=?, type=? WHERE UserId=?";
+        String sql = "UPDATE users SET username=?, password=?, type=? WHERE id=?";
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
@@ -66,7 +66,7 @@ public class UserDAO {
     }
 
     public static boolean deleteUser(int userId) {
-        String sql = "DELETE FROM users WHERE UserId=?";
+        String sql = "DELETE FROM users WHERE id=?";
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             int affected = stmt.executeUpdate();
